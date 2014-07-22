@@ -1,0 +1,52 @@
+
+
+###################################################################################
+###CONFIG MCB_PERFORMANCE= STANDARD;
+###################################################################################
+### Timing Ignore constraints for paths crossing the clock domain 
+###################################################################################
+NET  "ddr2_comp/ramComp/memc3_wrapper_inst/memc3_mcb_raw_wrapper_inst/selfrefresh_mcb_mode" TIG;
+NET  "ddr2_comp/ramComp/c3_pll_lock" TIG;
+INST "ddr2_comp/ramComp/memc3_wrapper_inst/memc3_mcb_raw_wrapper_inst/gen_term_calib.mcb_soft_calibration_top_inst/mcb_soft_calibration_inst/DONE_SOFTANDHARD_CAL*" TIG;
+
+###Please uncomment the below TIG if used in a design which enables self-refresh mode
+###NET "image_buffer_comp/ramComp/memc3_wrapper_inst/memc3_mcb_raw_wrapper_inst/gen_term_calib.mcb_soft_calibration_top_inst/mcb_soft_calibration_inst/SELFREFRESH_MCB_REQ" TIG;
+NET "ddr2_comp/ramComp/memc3_wrapper_inst/memc3_mcb_raw_wrapper_inst/gen_term_calib.mcb_soft_calibration_top_inst/mcb_soft_calibration_inst/CKE_Train" TIG; ## This path exists for DDR2 only
+#########################################################################################################
+
+
+#########################################################################################################
+# Extra constraints for HDMI ports
+#########################################################################################################
+#
+# Constraint for RX0 clock
+#
+NET "hdmiMatri_Comp/dvi_rx0/rxclk" TNM_NET = DVI_CLOCK0;
+TIMESPEC TS_DVI_CLOCK0 = PERIOD "DVI_CLOCK0" 10 ns HIGH 50%;
+
+#
+# Constraint for RX1 clock
+#
+NET "hdmiMatri_Comp/dvi_rx1/rxclk" TNM_NET = DVI_CLOCK1;
+TIMESPEC TS_DVI_CLOCK1 = PERIOD "DVI_CLOCK1" 10 ns HIGH 50%;
+
+#
+# Multi-cycle paths for TX0
+#
+TIMEGRP "bramgrp_0" = RAMS(hdmiMatri_Comp/dvi_tx0/pixel2x/dataint<*>);
+TIMEGRP "fddbgrp_0" = FFS(hdmiMatri_Comp/dvi_tx0/pixel2x/db<*>);
+TIMEGRP "bramra_0"  = FFS(hdmiMatri_Comp/dvi_tx0/pixel2x/ra<*>);
+
+TIMESPEC "TS_ramdo_0" = FROM "bramgrp_0" TO "fddbgrp_0" TS_DVI_CLOCK0;
+TIMESPEC "TS_ramra_0" = FROM "bramra_0"  TO "fddbgrp_0" TS_DVI_CLOCK0;
+
+#
+# Multi-cycle paths for TX1
+#
+TIMEGRP "bramgrp_1" = RAMS(hdmiMatri_Comp/dvi_tx1/pixel2x/dataint<*>);
+TIMEGRP "fddbgrp_1" = FFS(hdmiMatri_Comp/dvi_tx1/pixel2x/db<*>);
+TIMEGRP "bramra_1"  = FFS(hdmiMatri_Comp/dvi_tx1/pixel2x/ra<*>);
+
+TIMESPEC "TS_ramdo_1" = FROM "bramgrp_1" TO "fddbgrp_1" TS_DVI_CLOCK1;
+TIMESPEC "TS_ramra_1" = FROM "bramra_1"  TO "fddbgrp_1" TS_DVI_CLOCK1;
+
