@@ -98,19 +98,19 @@ port
 	sda_pc0 	: inout std_logic; -- DDC sda connected with PC
 	sda_lcd0	: inout std_logic; -- DDC sda connected with LCD
 
-	scl_pc1 	: in std_logic; -- DDC scl connected with PC
-	sda_pc1 	: inout std_logic; -- DDC sda connected with PC	
+	--scl_pc1 	: in std_logic; -- DDC scl connected with PC
+	--sda_pc1 	: inout std_logic; -- DDC sda connected with PC	
 	
 	-- scl_lcd1 	: out std_logic; -- DDC scl connected with LCD
 	-- sda_lcd1 	: inout std_logic; -- DDC sda connected with LCD
 
-	btnc 		: in std_logic;
-	btnu		: in std_logic; 
-	btnl		: in std_logic;
-	btnr		: in std_logic; 
-	btnd		: in std_logic; 
+	--btnc 		: in std_logic;
+	--btnu		: in std_logic; 
+	--btnl		: in std_logic;
+	--btnr		: in std_logic; 
+	--btnd		: in std_logic; 
 
-	LED 		: out std_logic_vector(7 downto 0);
+	--LED 		: out std_logic_vector(7 downto 0);
 	sw 			: in std_logic_vector(7 downto 0);
 
 	-- USB Chip
@@ -255,45 +255,45 @@ rst <= not rst_n;
 slcs <= '0';
 slwr <= slwr_i;
 
-LED(0) <= de_H0;
-LED(1) <= de_H1;
-LED(2) <= usb_cmd(1);
-LED(3) <= flagB; -- full flag
-LED(4) <= flagC; -- empty flag 
-LED(5) <= slwr_i;
-LED(6) <= selector_cmd(0);
-LED(7) <= selector_cmd(1);
+--LED(0) <= de_H0;
+--LED(1) <= de_H1;
+--LED(2) <= usb_cmd(1);
+--LED(3) <= flagB; -- full flag
+--LED(4) <= flagC; -- empty flag 
+--LED(5) <= slwr_i;
+--LED(6) <= selector_cmd(0);
+--LED(7) <= selector_cmd(1);
 
 
-debouncerBtnc : entity work.debouncer
-	port map(clk    => img_clk,
-		     rst_n  => rst_n,
-		     insig  => btnc,
-		     outsig => hpd);
-			 
-debouncerBtnu : entity work.debouncer
-	port map(clk    => img_clk,
-		     rst_n  => rst_n,
-		     insig  => btnu,
-		     outsig => btnu_s);
-		     
-debouncerBtnd : entity work.debouncer
-	port map(clk    => img_clk,
-		     rst_n  => rst_n,
-		     insig  => btnd,
-		     outsig => btnd_s);		     
-
-debouncerBtnl : entity work.debouncer
-	port map(clk    => img_clk,
-		     rst_n  => rst_n,
-		     insig  => btnl,
-		     outsig => btnl_s);		     
-
-debouncerBtnr : entity work.debouncer
-	port map(clk    => img_clk,
-		     rst_n  => rst_n,
-		     insig  => btnr,
-		     outsig => btnr_s);		     
+--debouncerBtnc : entity work.debouncer
+--	port map(clk    => img_clk,
+--		     rst_n  => rst_n,
+--		     insig  => btnc,
+--		     outsig => hpd);
+--			 
+--debouncerBtnu : entity work.debouncer
+--	port map(clk    => img_clk,
+--		     rst_n  => rst_n,
+--		     insig  => 1,
+--		     outsig => btnu_s);
+--		     
+--debouncerBtnd : entity work.debouncer
+--	port map(clk    => img_clk,
+--		     rst_n  => rst_n,
+--		     insig  => btnd,
+--		     outsig => btnd_s);		     
+--
+--debouncerBtnl : entity work.debouncer
+--	port map(clk    => img_clk,
+--		     rst_n  => rst_n,
+--		     insig  => btnl,
+--		     outsig => btnl_s);		     
+--
+--debouncerBtnr : entity work.debouncer
+--	port map(clk    => img_clk,
+--		     rst_n  => rst_n,
+--		     insig  => btnr,
+--		     outsig => btnr_s);		     
 
 		     
 jpeg_encoder : entity work.jpeg_encoder_top
@@ -475,19 +475,19 @@ edid_hack0 : entity work.edid_master_slave_hack
 			 dvi_only	 => dvi_only(0),
 			 hdmi_dvi	 => hdmi_cmd(0));
 
-edid_hack1 : entity work.edid_master_slave_hack
-	port map(rst_n       => rst_n,
-		     clk         => img_clk,
-		     sda_lcd     => open,
-		     scl_lcd     => open,
-		     sda_pc      => sda_pc1, 
-		     scl_pc      => scl_pc1, 
-		     hpd_lcd     => hpd,
-			 hpd_pc		 => open,
-		     sda_byte    => edid1_byte,
-		     sda_byte_en => edid1_byte_en,
-			 dvi_only	 => dvi_only(1),
-			 hdmi_dvi	 => hdmi_cmd(1));
+--edid_hack1 : entity work.edid_master_slave_hack
+--	port map(rst_n       => rst_n,
+--		     clk         => img_clk,
+--		     sda_lcd     => open,
+--		     scl_lcd     => open,
+--		     sda_pc      => open, 
+--		     scl_pc      => open, 
+--		     hpd_lcd     => hpd,
+--			 hpd_pc		 => open,
+--		     sda_byte    => edid1_byte,
+--		     sda_byte_en => edid1_byte_en,
+--			 dvi_only	 => dvi_only(1),
+--			 hdmi_dvi	 => hdmi_cmd(1));
 		     
 rgb2ycbcr_comp: entity work.rgb2ycbcr
 	port map(
