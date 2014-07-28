@@ -2,7 +2,7 @@ run
 -ifn ../ise/hdmi2usb.prj
 -ofn hdmi2usb
 -ofmt NGC
--p xc6slx45-3-csg324
+-p xc6slx45-csg324-2
 -top hdmi2usb
 -opt_mode Speed
 -opt_level 2

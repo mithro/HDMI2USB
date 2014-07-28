@@ -8,6 +8,10 @@ BUILD_DIR = build # build directiry for temp files
 # Top Level
 all: syn tran map par trce bit
 
+SPEED=2
+PART=xc6slx45-csg324-$(SPEED)
+
+
 syn:
 	@echo "========================================================="
 	@echo "                       Synthesizing                      "
@@ -33,7 +37,8 @@ tran:
 	-sd ../ipcore_dir \
 	-nt timestamp \
 	-uc ../ucf/hdmi2usb.ucf \
-	-p xc6slx45-csg324-3 hdmi2usb.ngc hdmi2usb.ngd \
+	-p $(PART) \
+        hdmi2usb.ngc hdmi2usb.ngd \
         | $(COLORMAKETOOL); (exit $${PIPESTATUS[0]})
 
 map:
@@ -44,7 +49,7 @@ map:
 	map \
 	-filter "../ise/iseconfig/filter.filter" \
 	-intstyle $(INTSTYLE) \
-	-p xc6slx45-csg324-3 \
+	-p $(PART) \
 	-w -logic_opt off \
 	-ol high \
 	-xe n \
@@ -56,6 +61,7 @@ map:
 	-mt off -ir off \
 	-pr b -lc off \
 	-power off \
+	-detail \
 	-o hdmi2usb_map.ncd hdmi2usb.ngd hdmi2usb.pcf \
         | $(COLORMAKETOOL); (exit $${PIPESTATUS[0]})
 
@@ -80,13 +86,15 @@ trce:
 	trce \
 	-filter "../ise/iseconfig/filter.filter" \
 	-intstyle $(INTSTYLE) \
-	-v 3 \
-	-s 3 \
-	-n 3 \
+	-s $(SPEED) \
+	-v 10 \
+	-n 10 \
 	-fastpaths \
 	-xml hdmi2usb.twx hdmi2usb.ncd \
 	-o hdmi2usb.twr hdmi2usb.pcf \
         | $(COLORMAKETOOL); (exit $${PIPESTATUS[0]})
+
+# -v / -n are limits on detailed output
 
 bit:
 	@echo "========================================================="
