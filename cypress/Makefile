@@ -16,10 +16,9 @@ packages:
 	@$(call install_package,winetricks)
 
 wine: packages
-	wine wineboot
-	winetricks dotnet20sp1
-	winetricks ie8
-
+	[ -f ~/.wine32/drive_c ] || wine wineboot
+	[ -d ~/.cache/winetricks/dotnet20sp1 ] || winetricks dotnet20sp1
+	[ -d ~/.cache/winetricks/ie8 ] || winetricks ie8
 
 CY3684Setup.exe:
 	wget "http://dlm.cypress.com.edgesuite.net/downloadmanager/software/cy3684kit_revSA.zip?userid=375693441"
