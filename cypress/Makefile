@@ -9,8 +9,8 @@ output/hdmi2usb.hex: DSCR_HDMI2USB.a51 EZUSB.LIB fw.c Fx2.h fx2regs.h fx2sdly.h 
 
 
 packages:
-	sudo add-apt-repository ppa:ubuntu-wine/ppa
-	sudo apt-get update
+	[ -f /etc/apt/sources.list.d/ubuntu-wine-ppa-trusty.list ] || (sudo add-apt-repository ppa:ubuntu-wine/ppa && sudo apt-get update)
+	sudo apt-get install unzip
 	sudo apt-get install wine1.7
 	sudo apt-get install winetricks
 
