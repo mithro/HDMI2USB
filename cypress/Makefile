@@ -5,7 +5,7 @@ export WINEPREFIX=$(HOME)/.wine32
 export WINEARCH=win32
 
 output/hdmi2usb.hex: DSCR_HDMI2USB.a51 EZUSB.LIB fw.c Fx2.h fx2regs.h fx2sdly.h hdmi2usb.c hdmi2usb.Uv2 syncdly.h usb2hdmi.inf USBJmpTb.OBJ
-	wine ~/.wine32/drive_c/Keil/UV2/uv2.exe -b hdmi2usb.Uv2
+	wine $(WINEPREFIX)/drive_c/Keil/UV2/uv2.exe -b hdmi2usb.Uv2
 
 
 install_package = dpkg -s $(1) > /dev/null 2>&1 || sudo apt-get -y install $(1)
@@ -16,7 +16,7 @@ packages:
 	@$(call install_package,winetricks)
 
 wine: packages
-	[ -f ~/.wine32/drive_c ] || wine wineboot
+	[ -f $(WINEPREFIX)/drive_c ] || wine wineboot
 	[ -d ~/.cache/winetricks/dotnet20sp1 ] || winetricks dotnet20sp1
 	[ -d ~/.cache/winetricks/ie8 ] || winetricks ie8
 
