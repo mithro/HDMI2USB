@@ -111,6 +111,17 @@ xsvf:
 	impact -batch ../ucf/hdmi2usb.batch \
         | $(COLORMAKETOOL); (exit $${PIPESTATUS[0]})
 
-clean:
+clean: 
 	rm -R $(BUILD_DIR)
+
+
+cypress/output/hdmi2usb.hex:
+	cd cypress; make output/hdmi2usb.hex
+
+GIT_NAME=$(shell git describe --dirty)
+GIT_COMMIT=$(shell git rev-parse --verify HEAD)
+
+prebuilt: cypress/output/hdmi2usb.hex bit xsvf
+	git clone git@github.com:timvideos/HDMI2USB-firmware-prebuilt.git prebuilt
+	
 
