@@ -110,7 +110,7 @@ trce:
 	trce \
 	-filter "../ise/iseconfig/filter.filter" \
 	-intstyle $(INTSTYLE) \
-	-s $(FPGA_SPEEDGRADE) \
+	-s $(FPGA_SPEED) \
 	-v 10 \
 	-n 10 \
 	-fastpaths \
