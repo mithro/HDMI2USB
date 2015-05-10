@@ -10,11 +10,12 @@ INTSTYLE = ise
 # Top Level
 all: syn tran map par trce bit
 
-include board/$(DEVICE)
+DEVICE := Digilent/Atlys
+include boards/$(DEVICE)/Makefile
 BOARD_SPEC=$(BOARD_MAKER)-$(BOARD_MODEL)-$(BOARD_REVISION)
 
 # Directory we'll put the output files in
-BUILD_DIR=build/$(BOARD_SPEC)
+BUILD_DIR=build
 $(BUILD_DIR):
 	mkdir $@
 
@@ -42,7 +43,7 @@ tran:
 	-dd _ngo \
 	-sd ../ipcore_dir \
 	-nt timestamp \
-	-uc ../ucf/hdmi2usb.ucf \
+	-uc ../ucf/$(BOARD_SPEC).ucf \
 	-p $(FPGA_PART) \
         hdmi2usb.ngc hdmi2usb.ngd \
         | $(COLORMAKETOOL); (exit $${PIPESTATUS[0]})

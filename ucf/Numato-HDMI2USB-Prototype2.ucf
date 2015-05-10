@@ -1,0 +1,298 @@
+CONFIG VCCAUX = 3.3;
+
+
+##############################################################################
+# SYSCLK Input
+##############################################################################
+
+# FXO-HC536R - component U17
+NET "clk"                  LOC =   "AB13" |IOSTANDARD = LVCMOS33;     #                      (/FPGA_Bank_1_2/USRCLK)
+NET "rst_n"                LOC =     "Y3" |IOSTANDARD = LVCMOS15;
+
+NET "clk" TNM_NET = clk;
+TIMESPEC TS_clk = PERIOD "clk" 10 ns HIGH 50%;
+
+#
+#INST "img_sel_comp/BUFGMUX_HDMI" TIG;
+#INST "img_sel_comp/BUFGMUX_PCLK" TIG;
+
+
+
+########################################
+# LEDs
+########################################
+#NET "LED<0>"   LOC = "U18" |IOSTANDARD = LVCMOS33;
+#NET "LED<1>"   LOC = "M14" |IOSTANDARD = LVCMOS33;
+#NET "LED<2>"   LOC = "N14" |IOSTANDARD = LVCMOS33;
+#NET "LED<3>"   LOC = "L14" |IOSTANDARD = LVCMOS33;
+#NET "LED<4>"   LOC = "M13" |IOSTANDARD = LVCMOS33;
+#NET "LED<5>"   LOC = "D4"  |IOSTANDARD = LVCMOS33;
+#NET "LED<6>"   LOC = "P16" |IOSTANDARD = LVCMOS33;
+#NET "LED<7>"   LOC = "N12" |IOSTANDARD = LVCMOS33;
+
+
+########################################
+# SW
+########################################
+#NET "sw<0>" LOC = "A10" |IOSTANDARD = LVCMOS33;
+#NET "sw<1>" LOC = "D14" |IOSTANDARD = LVCMOS33;
+#NET "sw<2>" LOC = "C14" |IOSTANDARD = LVCMOS33;
+#NET "sw<3>" LOC = "P15" |IOSTANDARD = LVCMOS33;
+#NET "sw<4>" LOC = "P12" |IOSTANDARD = LVCMOS33;
+#NET "sw<5>" LOC = "R5" |IOSTANDARD = LVCMOS33;
+#NET "sw<6>" LOC = "T5" |IOSTANDARD = LVCMOS33;
+#NET "sw<7>" LOC = "E4" |IOSTANDARD = LVCMOS33;
+
+########################################
+# Push Buttons
+########################################
+#NET "btnu" LOC = "N4" |IOSTANDARD = LVCMOS33; #up
+#NET "btnl" LOC = "P4" |IOSTANDARD = LVCMOS33; #Left
+#NET "btnd" LOC = "P3" |IOSTANDARD = LVCMOS33; #down
+#NET "btnr" LOC = "F6" |IOSTANDARD = LVCMOS33; #right
+#NET "btnc" LOC = "F5" |IOSTANDARD = LVCMOS33; #center
+#########################################################################################################
+
+#############################################################################
+# SCL SDA
+#############################################################################
+# HDMI - connector J4 - Direction RX
+# \/ Weakly pulled (47k) to VCC3V3 via R135
+NET "scl_pc0"                 LOC =   "L17" |IOSTANDARD =        LVCMOS33;     #                      (/HDMI/P1-SCL | /HDMI/TMDS-RX1-SCL)
+# \/ Weakly pulled (47k) to VCC3V3 via R136
+NET "sda_pc0"                 LOC =   "T18" |IOSTANDARD =        LVCMOS33;     #                      (/HDMI/P1-SDA | /HDMI/TMDS-RX1-SDA)
+
+# HDMI - connector J5 - Direction RX
+# \/ Weakly pulled (47k) to VCC3V3 via R193
+NET "scl_pc1"                 LOC =   "T21" |IOSTANDARD =        LVCMOS33;     #                      (/HDMI/P3-SCL | /HDMI/TMDS-RX2-SCL)
+# \/ Weakly pulled (47k) to VCC3V3 via R194
+NET "sda_pc1"                 LOC =   "R22" |IOSTANDARD =        LVCMOS33;     #                      (/HDMI/P3-SDA | /HDMI/TMDS-RX2-SDA)
+
+# HDMI - connector J2 - Direction TX
+# \/ Weakly pulled (47k) to VCC3V3 via R129
+NET "scl_lcd0"                LOC =   "Y17" |IOSTANDARD =        LVCMOS33;     #                      (/HDMI/P4-SCL | /HDMI/TMDS-TX2-SCL)
+# \/ Weakly pulled (47k) to VCC3V3 via R133
+NET "sda_lcd0"                LOC =   "AB17" |IOSTANDARD =        LVCMOS33;     #                      (/HDMI/P4-SDA | /HDMI/TMDS-TX2-SDA)
+
+# HDMI - connector J3 - Direction TX
+# \/ Weakly pulled (47k) to VCC3V3 via R134
+NET "scl_lcd1"                LOC =   "Y7" |IOSTANDARD =        LVCMOS33;     #                      (/HDMI/P2-SCL | /HDMI/TMDS-TX1-SCL)
+# \/ Weakly pulled (47k) to VCC3V3 via R130
+NET "scl_lcd1"                LOC =   "Y10" |IOSTANDARD =        LVCMOS33;     #                      (/HDMI/P2-SDA | /HDMI/TMDS-TX1-SDA)
+
+#########################################################################################################
+#
+# Constraint for RX0
+#
+NET "hdmiMatri_Comp/dvi_rx0/rxclk" TNM_NET = DVI_CLOCK0;
+TIMESPEC TS_DVI_CLOCK0 = PERIOD "DVI_CLOCK0" 10 ns HIGH 50%;
+
+#
+# Constraint for RX1
+#
+NET "hdmiMatri_Comp/dvi_rx1/rxclk" TNM_NET = DVI_CLOCK1;
+TIMESPEC TS_DVI_CLOCK1 = PERIOD "DVI_CLOCK1" 10 ns HIGH 50%;
+
+#
+# Multi-cycle paths for TX0
+#
+TIMEGRP "bramgrp_0" = RAMS(hdmiMatri_Comp/dvi_tx0/pixel2x/dataint<*>);
+TIMEGRP "fddbgrp_0" = FFS(hdmiMatri_Comp/dvi_tx0/pixel2x/db<*>);
+TIMEGRP "bramra_0"  = FFS(hdmiMatri_Comp/dvi_tx0/pixel2x/ra<*>);
+
+TIMESPEC "TS_ramdo_0" = FROM "bramgrp_0" TO "fddbgrp_0" TS_DVI_CLOCK0;
+TIMESPEC "TS_ramra_0" = FROM "bramra_0"  TO "fddbgrp_0" TS_DVI_CLOCK0;
+
+#
+# Multi-cycle paths for TX1
+#
+TIMEGRP "bramgrp_1" = RAMS(hdmiMatri_Comp/dvi_tx1/pixel2x/dataint<*>);
+TIMEGRP "fddbgrp_1" = FFS(hdmiMatri_Comp/dvi_tx1/pixel2x/db<*>);
+TIMEGRP "bramra_1"  = FFS(hdmiMatri_Comp/dvi_tx1/pixel2x/ra<*>);
+
+TIMESPEC "TS_ramdo_1" = FROM "bramgrp_1" TO "fddbgrp_1" TS_DVI_CLOCK1;
+TIMESPEC "TS_ramra_1" = FROM "bramra_1"  TO "fddbgrp_1" TS_DVI_CLOCK1;
+
+#####################################
+#PIN "hdmiMatri_Comp/dvi_rx0/pclkbufg.O" CLOCK_DEDICATED_ROUTE = FALSE;
+#PIN "hdmiMatri_Comp/dvi_rx1/pclkbufg.O" CLOCK_DEDICATED_ROUTE = FALSE;
+
+##################################################
+# TMDS pairs for Numato IN (FPGA Bank XX): J4
+##################################################
+NET "RX0_TMDS(3)"           LOC =    "M20"  |IOSTANDARD =         TMDS_33;     # CLK
+NET "RX0_TMDSB(3)"          LOC =    "M19"  |IOSTANDARD =         TMDS_33; 
+NET "RX0_TMDS(2)"           LOC =    "K20"  |IOSTANDARD =         TMDS_33;     # Red
+NET "RX0_TMDSB(2)"          LOC =    "L19"  |IOSTANDARD =         TMDS_33; 
+NET "RX0_TMDS(1)"           LOC =    "H21"  |IOSTANDARD =         TMDS_33;     # Green
+NET "RX0_TMDSB(1)"          LOC =    "H22"  |IOSTANDARD =         TMDS_33; 
+NET "RX0_TMDS(0)"           LOC =    "J20"  |IOSTANDARD =         TMDS_33;     # Blue
+NET "RX0_TMDSB(0)"          LOC =    "J22"  |IOSTANDARD =         TMDS_33; 
+
+##############################################
+# TMDS pairs for Numato IN (FPGA Bank XX): J5
+##############################################
+NET "RX1_TMDS(3)"           LOC =    "L20"  |IOSTANDARD =         TMDS_33;     # CLK
+NET "RX1_TMDSB(3)"          LOC =    "L22"  |IOSTANDARD =         TMDS_33; 
+NET "RX1_TMDS(2)"           LOC =    "P21"  |IOSTANDARD =         TMDS_33;     # Red
+NET "RX1_TMDSB(2)"          LOC =    "P22"  |IOSTANDARD =         TMDS_33; 
+NET "RX1_TMDS(1)"           LOC =    "N20"  |IOSTANDARD =         TMDS_33;     # Green
+NET "RX1_TMDSB(1)"          LOC =    "N22"  |IOSTANDARD =         TMDS_33; 
+NET "RX1_TMDS(0)"           LOC =    "M21"  |IOSTANDARD =         TMDS_33;     # Blue
+NET "RX1_TMDSB(0)"          LOC =    "M22"  |IOSTANDARD =         TMDS_33; 
+
+############################################
+# TMDS pairs for Numato OUT (FPGA Bank XX): J2
+############################################
+NET "TX0_TMDS(2)"           LOC =    "U14"  |IOSTANDARD =         TMDS_33;     # Red
+NET "TX0_TMDSB(2)"          LOC =    "U13"  |IOSTANDARD =         TMDS_33; 
+NET "TX0_TMDS(1)"           LOC =   "AA16"  |IOSTANDARD =         TMDS_33;     # Green
+NET "TX0_TMDSB(1)"          LOC =   "AB16"  |IOSTANDARD =         TMDS_33; 
+NET "TX0_TMDS(0)"           LOC =    "Y15"  |IOSTANDARD =         TMDS_33;     # Blue
+NET "TX0_TMDSB(0)"          LOC =   "AB15"  |IOSTANDARD =         TMDS_33; 
+NET "TX0_TMDS(3)"           LOC =    "T12"  |IOSTANDARD =         TMDS_33;     # CLK
+NET "TX0_TMDSB(3)"          LOC =    "U12"  |IOSTANDARD =         TMDS_33; 
+
+##############################################
+# TMDS pairs for Numato OUT (FPGA Bank XX): J3
+##############################################
+NET "TX1_TMDS(2)"           LOC =     "Y9"  |IOSTANDARD =         TMDS_33;     # Red
+NET "TX1_TMDSB(2)"          LOC =    "AB9"  |IOSTANDARD =         TMDS_33; 
+NET "TX1_TMDS(1)"           LOC =   "AA10"  |IOSTANDARD =         TMDS_33;     # Green
+NET "TX1_TMDSB(1)"          LOC =   "AB10"  |IOSTANDARD =         TMDS_33; 
+NET "TX1_TMDS(0)"           LOC =    "W12"  |IOSTANDARD =         TMDS_33;     # Blue
+NET "TX1_TMDSB(0)"          LOC =    "Y12"  |IOSTANDARD =         TMDS_33; 
+NET "TX1_TMDS(3)"           LOC =    "Y11"  |IOSTANDARD =         TMDS_33;     # CLK
+NET "TX1_TMDSB(3)"          LOC =   "AB11"  |IOSTANDARD =         TMDS_33; 
+
+#########################################################################################################
+## on chip usb
+NET "fdata<0>"         LOC =    "C20"  |IOSTANDARD =        LVCMOS33; 
+NET "fdata<1>"         LOC =    "C22"  |IOSTANDARD =        LVCMOS33; 
+NET "fdata<2>"         LOC =    "L15"  |IOSTANDARD =        LVCMOS33; 
+NET "fdata<3>"         LOC =    "K16"  |IOSTANDARD =        LVCMOS33; 
+NET "fdata<4>"         LOC =    "D21"  |IOSTANDARD =        LVCMOS33; 
+NET "fdata<5>"         LOC =    "D22"  |IOSTANDARD =        LVCMOS33; 
+NET "fdata<6>"         LOC =    "G19"  |IOSTANDARD =        LVCMOS33; 
+NET "fdata<7>"         LOC =    "F20"  |IOSTANDARD =        LVCMOS33; 
+NET "fdata<*>" DRIVE=16 |SLEW=SLOW;
+
+NET "flagA"            LOC =   "N16" |IOSTANDARD =        LVCMOS33 |SLEW=SLOW |DRIVE=12; 
+NET "flagB"            LOC =   "P16" |IOSTANDARD =        LVCMOS33 |SLEW=SLOW |DRIVE=12; 
+NET "flagC"            LOC =   "R15" |IOSTANDARD =        LVCMOS33 |SLEW=SLOW |DRIVE=12; 
+NET "faddr<0>"         LOC =   "B21" |IOSTANDARD =        LVCMOS33 |SLEW=SLOW |DRIVE=12; 
+NET "faddr<1>"         LOC =   "B22" |IOSTANDARD =        LVCMOS33 |SLEW=SLOW |DRIVE=12; 
+NET "ifclk"            LOC =   "P20" |IOSTANDARD =        LVCMOS33 |SLEW=SLOW |DRIVE=12; 
+NET "slrd"             LOC =   "P19" |IOSTANDARD =        LVCMOS33 |SLEW=SLOW |DRIVE=12; 
+NET "sloe"             LOC =   "H16" |IOSTANDARD =        LVCMOS33 |SLEW=SLOW |DRIVE=12; 
+NET "slwr"             LOC =   "R19" |IOSTANDARD =        LVCMOS33 |SLEW=SLOW |DRIVE=12; 
+NET "slcs"             LOC =   "J17" |IOSTANDARD =        LVCMOS33 |SLEW=SLOW |DRIVE=12; 
+NET "pktend"           LOC =   "J16" |IOSTANDARD =        LVCMOS33 |SLEW=SLOW |DRIVE=12; 
+
+NET "ifclk" TNM_NET = ifclk;
+TIMESPEC TS_ifclk = PERIOD "ifclk" 48 MHz HIGH 50%;
+
+##########################################################################################################
+### off chip usb
+#NET "fdata<0>" IOSTANDARD = LVCMOS33 |LOC = "T11"; # Schematic name: U1-FD0
+#NET "fdata<1>" IOSTANDARD = LVCMOS33 |LOC = "T12"; # Schematic name: U1-FD1
+#NET "fdata<2>" IOSTANDARD = LVCMOS33 |LOC = "V12"; # Schematic name: U1-FD2
+#NET "fdata<3>" IOSTANDARD = LVCMOS33 |LOC = "N10"; # Schematic name: U1-FD3
+#NET "fdata<4>" IOSTANDARD = LVCMOS33 |LOC = "P11"; # Schematic name: U1 FD4
+#NET "fdata<5>" IOSTANDARD = LVCMOS33 |LOC = "M10"; # Schematic name: U1-FD5
+#NET "fdata<6>" IOSTANDARD = LVCMOS33 |LOC = "N9"; # Schematic name: U1-FD6
+#NET "fdata<7>" IOSTANDARD = LVCMOS33 |LOC = "U11"; # Schematic name: U1-FD7
+#NET "flagA" IOSTANDARD = LVCMOS33 |LOC = "N8"; # Schematic name: U1-FLAGA
+#NET "flagB" IOSTANDARD = LVCMOS33 |LOC = "U15"; # Schematic name: U1-FLAGB
+#NET "flagC" IOSTANDARD = LVCMOS33 |LOC = "U8"; # Schematic name: U1-FLAGC
+#NET "faddr<0>" IOSTANDARD = LVCMOS33 |LOC = "M11"; # Schematic name: 
+#NET "faddr<1>" IOSTANDARD = LVCMOS33 |LOC = "V13"; # Schematic name:
+#NET "ifclk" IOSTANDARD = LVCMOS33 |LOC = "T8"; # Schematic name: 
+#NET "slrd" IOSTANDARD = LVCMOS33 |LOC = "V11" |DRIVE = 16 ; # Schematic name: # pullled up 
+#NET "sloe" IOSTANDARD = LVCMOS33 |LOC = "R11" |DRIVE = 16 ; # Schematic name: # pullled up 
+#NET "slwr" IOSTANDARD = LVCMOS33 |LOC = "N11" |DRIVE = 16 ; # Schematic name: # pullled up 
+#NET "slcs" IOSTANDARD = LVCMOS33 |LOC = "B2"; # Schematic name: # connect it to ground to dedicate this bus only ( has pull down resistor in Atlys)
+#NET "pktend" IOSTANDARD = LVCMOS33 |LOC = "R8"; # Schematic name: //
+#TIMESPEC TS_ifclk = PERIOD "ifclk" 48 MHz HIGH 50%;
+#########################################################################################################
+
+############################################################################
+# DDR3 RAM 
+############################################################################
+# MT41J128M16 - component U1
+NET "mcb3_dram_a<0>"       LOC =     "K2"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_A0)
+NET "mcb3_dram_a<1>"       LOC =     "K1"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_A1)
+NET "mcb3_dram_a<10>"      LOC =     "J4"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_A10)
+NET "mcb3_dram_a<11>"      LOC =     "E1"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_A11)
+NET "mcb3_dram_a<12>"      LOC =     "F1"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_A12)
+# \/ Strongly pulled (0.0) to VTTDDR0 via R1
+NET "mcb3_dram_a<13>"      LOC =     "J6"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_A13)
+NET "mcb3_dram_a<14>"      LOC =     "H5"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_A14)
+NET "mcb3_dram_a<2>"       LOC =     "K5"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_A2)
+NET "mcb3_dram_a<3>"       LOC =     "M6"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_A3)
+NET "mcb3_dram_a<4>"       LOC =     "H3"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_A4)
+NET "mcb3_dram_a<5>"       LOC =     "M3"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_A5)
+NET "mcb3_dram_a<6>"       LOC =     "L4"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_A6)
+NET "mcb3_dram_a<7>"       LOC =     "K6"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_A7)
+NET "mcb3_dram_a<8>"       LOC =     "G3"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_A8)
+NET "mcb3_dram_a<9>"       LOC =     "G1"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_A9)
+NET "mcb3_dram_ba<0>"      LOC =     "J3"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_BA0)
+NET "mcb3_dram_ba<1>"      LOC =     "J1"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_BA1)
+NET "mcb3_dram_ba<2>"      LOC =     "H1"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_BA2)
+NET "mcb_dram_cas_n"       LOC =     "M4"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_CAS_N)
+NET "mcb_dram_ck"          LOC =     "K3"       |IOSTANDARD =  DIFF_SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_CK_N | /DDR3/DDR0_CK_P)
+NET "mcb_dram_ck"          LOC =     "K4"       |IOSTANDARD =  DIFF_SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_CK_N | /DDR3/DDR0_CK_P)
+# \/ Strongly pulled (4k) to GND via R7
+NET "mcb_dram_cke"         LOC =     "F2"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_CKE)
+NET "mcb_dram_ck_n"        LOC =     "K3"       |IOSTANDARD =  DIFF_SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_CK_N | /DDR3/DDR0_CK_P)
+NET "mcb_dram_ck_n"        LOC =     "K4"       |IOSTANDARD =  DIFF_SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_CK_N | /DDR3/DDR0_CK_P)
+NET "mcb3_dram_dq<0>"      LOC =     "R3"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_DQ0)
+NET "mcb3_dram_dq<1>"      LOC =     "R1"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_DQ1)
+NET "mcb3_dram_dq<10>"     LOC =     "U3"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_DQ10)
+NET "mcb3_dram_dq<11>"     LOC =     "U1"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_DQ11)
+NET "mcb3_dram_dq<12>"     LOC =     "W3"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_DQ12)
+NET "mcb3_dram_dq<13>"     LOC =     "W1"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_DQ13)
+NET "mcb3_dram_dq<14>"     LOC =     "Y2"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_DQ14)
+NET "mcb3_dram_dq<15>"     LOC =     "Y1"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_DQ15)
+NET "mcb3_dram_dq<2>"      LOC =     "P2"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_DQ2)
+NET "mcb3_dram_dq<3>"      LOC =     "P1"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_DQ3)
+NET "mcb3_dram_dq<4>"      LOC =     "L3"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_DQ4)
+NET "mcb3_dram_dq<5>"      LOC =     "L1"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_DQ5)
+NET "mcb3_dram_dq<6>"      LOC =     "M2"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_DQ6)
+NET "mcb3_dram_dq<7>"      LOC =     "M1"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_DQ7)
+NET "mcb3_dram_dq<8>"      LOC =     "T2"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_DQ8)
+NET "mcb3_dram_dq<9>"      LOC =     "T1"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_DQ9)
+NET "mcb_dram_ldm"         LOC =     "N4"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_LDM)
+NET "mcb_dram_ldqs"        LOC =     "N3"       |IOSTANDARD =  DIFF_SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_LDQS_P)
+NET "mcb_dram_ldqs_n"      LOC =     "N1"       |IOSTANDARD =  DIFF_SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_LDQS_N)
+# \/ Strongly pulled (4k) to GND via R6
+NET "mcb_dram_odt"         LOC =     "L6"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_ODT)
+NET "mcb_dram_ras_n"       LOC =     "M5"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_RAS_N)
+# \/ Strongly pulled (4k) to GND via R5
+NET "mcb_dram_reset_n"     LOC =     "E3"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_RESET_N)
+NET "mcb_dram_udm"         LOC =     "P3"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_UDM)
+NET "mcb_dram_udqs"        LOC =     "V2"       |IOSTANDARD =  DIFF_SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_UDQS_P)
+NET "mcb_dram_udqs_n"      LOC =     "V1"       |IOSTANDARD =  DIFF_SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_UDQS_N)
+NET "mcb_dram_we_n"        LOC =     "H2"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_WE_N)
+
+NET  "mcb3_rzq"            LOC =   "R7" |IOSTANDARD =       SSTL15_II | OUT_TERM = UNTUNED_50;
+NET  "mcb3_zio"            LOC =   "K7" |IOSTANDARD =       SSTL15_II | OUT_TERM = UNTUNED_50;
+
+###################################################################################
+###CONFIG MCB_PERFORMANCE= STANDARD;
+###################################################################################
+### Timing Ignore constraints for paths crossing the clock domain 
+###################################################################################
+NET  "ddr2_comp/ramComp/memc3_wrapper_inst/memc3_mcb_raw_wrapper_inst/selfrefresh_mcb_mode" TIG;
+NET  "ddr2_comp/ramComp/c3_pll_lock" TIG;
+INST "ddr2_comp/ramComp/memc3_wrapper_inst/memc3_mcb_raw_wrapper_inst/gen_term_calib.mcb_soft_calibration_top_inst/mcb_soft_calibration_inst/DONE_SOFTANDHARD_CAL*" TIG;
+
+###Please uncomment the below TIG if used in a design which enables self-refresh mode
+###NET "image_buffer_comp/ramComp/memc3_wrapper_inst/memc3_mcb_raw_wrapper_inst/gen_term_calib.mcb_soft_calibration_top_inst/mcb_soft_calibration_inst/SELFREFRESH_MCB_REQ" TIG;
+NET "ddr2_comp/ramComp/memc3_wrapper_inst/memc3_mcb_raw_wrapper_inst/gen_term_calib.mcb_soft_calibration_top_inst/mcb_soft_calibration_inst/CKE_Train" TIG; ## This path exists for DDR2 only
+#########################################################################################################
+
+##UART
+NET "rx"             LOC =   "P18" |IOSTANDARD =        LVCMOS33 |SLEW=SLOW |DRIVE=12; 
+NET "tx"             LOC =   "T17" |IOSTANDARD =        LVCMOS33 |SLEW=SLOW |DRIVE=12; 
+####################################################################################
