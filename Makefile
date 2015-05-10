@@ -8,9 +8,9 @@ INTSTYLE = ise
 # INTSTYLE = silent
 
 # Top Level
-all: syn tran map par trce bit
+all: info syn tran map par trce bit
 
-DEVICE := Digilent/Atlys
+DEVICE ?= Digilent/Atlys
 include boards/$(DEVICE)/Makefile
 BOARD_SPEC=$(BOARD_MAKER)-$(BOARD_MODEL)-$(BOARD_REVISION)
 
@@ -18,6 +18,23 @@ BOARD_SPEC=$(BOARD_MAKER)-$(BOARD_MODEL)-$(BOARD_REVISION)
 BUILD_DIR=build
 $(BUILD_DIR):
 	mkdir $@
+
+info:
+	@echo ""
+	@echo "========================================================="
+	@echo " Board Details"
+	@echo "---------------------------------------------------------"
+	@echo "       Maker: $(BOARD_MAKER)"
+	@echo "       Model: $(BOARD_MODEL)"
+	@echo "         Rev: $(BOARD_REVISION)"
+	@echo ""
+	@echo " Board's FPGA Details"
+	@echo "---------------------------------------------------------"
+	@echo "        Type: $(FPGA_TYPE)"
+	@echo " Speed Grade: $(FPGA_SPEED)"
+	@echo "        Part: $(FPGA_PART)"
+	@echo "========================================================="
+	@echo ""
 
 syn:
 	@echo "========================================================="
