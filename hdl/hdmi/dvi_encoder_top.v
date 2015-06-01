@@ -8,7 +8,7 @@
 //
 //  File name :       dvi_encoder.v
 //
-//  Description :     dvi_encoder 
+//  Description :     dvi_encoder
 //
 //  Date - revision : April 2009 - 1.0.0
 //
@@ -39,134 +39,134 @@
 //              limitation shall apply not-withstanding the failure ofthe
 //              essential purpose of any limited remedies herein.
 //
-//  Copyright © 2009 Xilinx, Inc.
+//  Copyright À© 2009 Xilinx, Inc.
 //  All rights reserved
 //
 //////////////////////////////////////////////////////////////////////////////
 `timescale 1 ns / 1ps
 
 module dvi_encoder_top (
-  input  wire       pclk,           // pixel clock
-  input  wire       pclkx2,         // pixel clock x2
-  input  wire       pclkx10,        // pixel clock x2
-  input  wire       serdesstrobe,   // OSERDES2 serdesstrobe
-  input  wire       rstin,          // reset
-  input  wire [7:0] blue_din,       // Blue data in
-  input  wire [7:0] green_din,      // Green data in
-  input  wire [7:0] red_din,        // Red data in
-  input  wire       hsync,          // hsync data
-  input  wire       vsync,          // vsync data
-  input  wire       de,             // data enable
-  output wire [3:0] TMDS,
-  output wire [3:0] TMDSB);
-    
-  wire 	[9:0]	red ;
-  wire 	[9:0]	green ;
-  wire 	[9:0]	blue ;
+			input wire 	  pclk, // pixel clock
+			input wire 	  pclkx2, // pixel clock x2
+			input wire 	  pclkx10, // pixel clock x2
+			input wire 	  serdesstrobe, // OSERDES2 serdesstrobe
+			input wire 	  rstin, // reset
+			input wire [7:0]  blue_din, // Blue data in
+			input wire [7:0]  green_din, // Green data in
+			input wire [7:0]  red_din, // Red data in
+			input wire 	  hsync, // hsync data
+			input wire 	  vsync, // vsync data
+			input wire 	  de, // data enable
+			output wire [3:0] TMDS,
+			output wire [3:0] TMDSB);
 
-  wire [4:0] tmds_data0, tmds_data1, tmds_data2;
-  wire [2:0] tmdsint;
+   wire [9:0] 				  red ;
+   wire [9:0] 				  green ;
+   wire [9:0] 				  blue ;
 
-  //
-  // Forward TMDS Clock Using OSERDES2 block
-  //
-  reg [4:0] tmdsclkint = 5'b00000;
-  reg toggle = 1'b0;
+   wire [4:0] 				  tmds_data0, tmds_data1, tmds_data2;
+   wire [2:0] 				  tmdsint;
 
-  always @ (posedge pclkx2 or posedge rstin) begin
-    if (rstin)
-      toggle <= 1'b0;
-    else
-      toggle <= ~toggle;
-  end
+   //
+   // Forward TMDS Clock Using OSERDES2 block
+   //
+   reg [4:0] 				  tmdsclkint = 5'b00000;
+   reg 					  toggle = 1'b0;
 
-  always @ (posedge pclkx2) begin
-    if (toggle)
-      tmdsclkint <= 5'b11111;
-    else
-      tmdsclkint <= 5'b00000;
-  end
+   always @ (posedge pclkx2 or posedge rstin) begin
+      if (rstin)
+	toggle <= 1'b0;
+      else
+	toggle <= ~toggle;
+   end
 
-  wire tmdsclk;
+   always @ (posedge pclkx2) begin
+      if (toggle)
+	tmdsclkint <= 5'b11111;
+      else
+	tmdsclkint <= 5'b00000;
+   end
 
-  serdes_n_to_1 #(
-    .SF           (5))
-  clkout (
-    .iob_data_out (tmdsclk),
-    .ioclk        (pclkx10),
-    .serdesstrobe (serdesstrobe),
-    .gclk         (pclkx2),
-    .reset        (rstin),
-    .datain       (tmdsclkint));
+   wire tmdsclk;
 
-  OBUFDS TMDS3 (.I(tmdsclk), .O(TMDS[3]), .OB(TMDSB[3])) ;// clock
+   serdes_n_to_1 #(
+		   .SF           (5))
+   clkout (
+	   .iob_data_out (tmdsclk),
+	   .ioclk        (pclkx10),
+	   .serdesstrobe (serdesstrobe),
+	   .gclk         (pclkx2),
+	   .reset        (rstin),
+	   .datain       (tmdsclkint));
 
-  //
-  // Forward TMDS Data: 3 channels
-  //
-  serdes_n_to_1 #(.SF(5)) oserdes0 (
-             .ioclk(pclkx10),
-             .serdesstrobe(serdesstrobe),
-             .reset(rstin),
-             .gclk(pclkx2),
-             .datain(tmds_data0),
-             .iob_data_out(tmdsint[0])) ;
+   OBUFDS TMDS3 (.I(tmdsclk), .O(TMDS[3]), .OB(TMDSB[3])) ;// clock
 
-  serdes_n_to_1 #(.SF(5)) oserdes1 (
-             .ioclk(pclkx10),
-             .serdesstrobe(serdesstrobe),
-             .reset(rstin),
-             .gclk(pclkx2),
-             .datain(tmds_data1),
-             .iob_data_out(tmdsint[1])) ;
+   //
+   // Forward TMDS Data: 3 channels
+   //
+   serdes_n_to_1 #(.SF(5)) oserdes0 (
+				     .ioclk(pclkx10),
+				     .serdesstrobe(serdesstrobe),
+				     .reset(rstin),
+				     .gclk(pclkx2),
+				     .datain(tmds_data0),
+				     .iob_data_out(tmdsint[0])) ;
 
-  serdes_n_to_1 #(.SF(5)) oserdes2 (
-             .ioclk(pclkx10),
-             .serdesstrobe(serdesstrobe),
-             .reset(rstin),
-             .gclk(pclkx2),
-             .datain(tmds_data2),
-             .iob_data_out(tmdsint[2])) ;
+   serdes_n_to_1 #(.SF(5)) oserdes1 (
+				     .ioclk(pclkx10),
+				     .serdesstrobe(serdesstrobe),
+				     .reset(rstin),
+				     .gclk(pclkx2),
+				     .datain(tmds_data1),
+				     .iob_data_out(tmdsint[1])) ;
 
-  OBUFDS TMDS0 (.I(tmdsint[0]), .O(TMDS[0]), .OB(TMDSB[0])) ;
-  OBUFDS TMDS1 (.I(tmdsint[1]), .O(TMDS[1]), .OB(TMDSB[1])) ;
-  OBUFDS TMDS2 (.I(tmdsint[2]), .O(TMDS[2]), .OB(TMDSB[2])) ;
+   serdes_n_to_1 #(.SF(5)) oserdes2 (
+				     .ioclk(pclkx10),
+				     .serdesstrobe(serdesstrobe),
+				     .reset(rstin),
+				     .gclk(pclkx2),
+				     .datain(tmds_data2),
+				     .iob_data_out(tmdsint[2])) ;
 
-  encode encb (
-    .clkin	(pclk),
-    .rstin	(rstin),
-    .din		(blue_din),
-    .c0			(hsync),
-    .c1			(vsync),
-    .de			(de),
-    .dout		(blue)) ;
+   OBUFDS TMDS0 (.I(tmdsint[0]), .O(TMDS[0]), .OB(TMDSB[0])) ;
+   OBUFDS TMDS1 (.I(tmdsint[1]), .O(TMDS[1]), .OB(TMDSB[1])) ;
+   OBUFDS TMDS2 (.I(tmdsint[2]), .O(TMDS[2]), .OB(TMDSB[2])) ;
 
-  encode encg (
-    .clkin	(pclk),
-    .rstin	(rstin),
-    .din		(green_din),
-    .c0			(1'b0),
-    .c1			(1'b0),
-    .de			(de),
-    .dout		(green)) ;
-    
-  encode encr (
-    .clkin	(pclk),
-    .rstin	(rstin),
-    .din		(red_din),
-    .c0			(1'b0),
-    .c1			(1'b0),
-    .de			(de),
-    .dout		(red)) ;
+   encode encb (
+		.clkin	(pclk),
+		.rstin	(rstin),
+		.din		(blue_din),
+		.c0			(hsync),
+		.c1			(vsync),
+		.de			(de),
+		.dout		(blue)) ;
 
-  wire [29:0] s_data = {red[9:5], green[9:5], blue[9:5],
-                        red[4:0], green[4:0], blue[4:0]};
+   encode encg (
+		.clkin	(pclk),
+		.rstin	(rstin),
+		.din		(green_din),
+		.c0			(1'b0),
+		.c1			(1'b0),
+		.de			(de),
+		.dout		(green)) ;
 
-  convert_30to15_fifo pixel2x (
-    .rst     (rstin),
-    .clk     (pclk),
-    .clkx2   (pclkx2),
-    .datain  (s_data),
-    .dataout ({tmds_data2, tmds_data1, tmds_data0}));
+   encode encr (
+		.clkin	(pclk),
+		.rstin	(rstin),
+		.din		(red_din),
+		.c0			(1'b0),
+		.c1			(1'b0),
+		.de			(de),
+		.dout		(red)) ;
+
+   wire [29:0] s_data = {red[9:5], green[9:5], blue[9:5],
+                         red[4:0], green[4:0], blue[4:0]};
+
+   convert_30to15_fifo pixel2x (
+				.rst     (rstin),
+				.clk     (pclk),
+				.clkx2   (pclkx2),
+				.datain  (s_data),
+				.dataout ({tmds_data2, tmds_data1, tmds_data0}));
 
 endmodule
