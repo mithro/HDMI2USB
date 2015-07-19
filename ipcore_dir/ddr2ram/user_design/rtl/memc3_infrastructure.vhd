@@ -77,6 +77,7 @@ generic
     C_CLKOUT1_DIVIDE   : integer := 1;
     C_CLKOUT2_DIVIDE   : integer := 16;
     C_CLKOUT3_DIVIDE   : integer := 8;
+    C_CLKOUT4_DIVIDE   : integer := 1;
     C_CLKFBOUT_MULT   : integer := 2;
     C_DIVCLK_DIVIDE   : integer := 1
 
@@ -88,6 +89,7 @@ port
     sys_clk       : in std_logic;
     sys_rst_i       : in std_logic;
     clk0            : out std_logic;
+    clk_img         : out std_logic;
     rst0            : out std_logic;
     async_rst       : out std_logic;
     sysclk_2x       : out std_logic;
@@ -131,6 +133,8 @@ architecture syn of memc3_infrastructure is
   signal   bufpll_mcb_locked   : std_logic;
   signal   mcb_drp_clk_sig     : std_logic;
 
+  signal   clk_img_bufg_in     : std_logic;
+
   attribute max_fanout : string;
   attribute syn_maxfan : integer;
   attribute KEEP : string; 
@@ -165,11 +169,11 @@ begin
       --***********************************************************************
       -- SINGLE_ENDED input clock input buffers
       --***********************************************************************
-      u_ibufg_sys_clk : IBUFG
-        port map (
-          I  => sys_clk,
-          O  => sys_clk_ibufg
-          );
+      -- u_ibufg_sys_clk : IBUFG
+        -- port map (
+          -- I  => sys_clk,
+          -- O  => sys_clk_ibufg
+          -- );
   end generate;   
 
   --***************************************************************************
@@ -186,7 +190,7 @@ begin
          CLKOUT1_DIVIDE     => C_CLKOUT1_DIVIDE,
          CLKOUT2_DIVIDE     => C_CLKOUT2_DIVIDE,
          CLKOUT3_DIVIDE     => C_CLKOUT3_DIVIDE,
-         CLKOUT4_DIVIDE     => 1,
+         CLKOUT4_DIVIDE     => C_CLKOUT4_DIVIDE,
          CLKOUT5_DIVIDE     => 1,
          CLKOUT0_PHASE      => 0.000,
          CLKOUT1_PHASE      => 180.000,
@@ -232,7 +236,7 @@ begin
            CLKOUT1          => clk_2x_180,
            CLKOUT2          => clk0_bufg_in,
            CLKOUT3          => mcb_drp_clk_bufg_in,
-           CLKOUT4          => open,
+           CLKOUT4          => clk_img_bufg_in,
            CLKOUT5          => open,
            DO               => open,
            DRDY             => open,
@@ -246,18 +250,25 @@ begin
      I => clk0_bufg_in
      );
 
-   --U_BUFG_CLK1 : BUFG 
-   -- port map (  
-   --  O => mcb_drp_clk_sig,
-   --  I => mcb_drp_clk_bufg_in
-   --  );
+    U_BUFG_img : BUFG
+    port map
+    (
+     O => clk_img,
+     I => clk_img_bufg_in
+     );
 
-   U_BUFG_CLK1 : BUFGCE 
+   U_BUFG_CLK1 : BUFG 
     port map (  
      O => mcb_drp_clk_sig,
-     I => mcb_drp_clk_bufg_in,
-     CE => locked
+     I => mcb_drp_clk_bufg_in
      );
+
+   -- U_BUFG_CLK1 : BUFGCE 
+    -- port map (  
+     -- O => mcb_drp_clk_sig,
+     -- I => mcb_drp_clk_bufg_in,
+     -- CE => locked
+     -- );
 
    process (mcb_drp_clk_sig, sys_rst)
    begin

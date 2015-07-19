@@ -226,7 +226,7 @@ NET "mcb3_dram_a<0>"       LOC = "K2"       |IOSTANDARD =       SSTL15_II |OUT_T
 NET "mcb3_dram_a<10>"      LOC = "J4"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_A10)
 NET "mcb3_dram_a<11>"      LOC = "E1"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_A11)
 NET "mcb3_dram_a<12>"      LOC = "F1"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_A12)
-#NET "mcb3_dram_a<13>"      LOC = "J6"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_A13)
+NET "mcb3_dram_a<13>"      LOC = "J6"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_A13)
 #NET "mcb3_dram_a<14>"      LOC = "H5"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_A14)
 NET "mcb3_dram_a<1>"       LOC = "K1"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_A1)
 NET "mcb3_dram_a<2>"       LOC = "K5"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_A2)
@@ -269,7 +269,7 @@ NET "mcb3_dram_udm"        LOC = "P3"       |IOSTANDARD =       SSTL15_II |OUT_T
 NET "mcb3_dram_udqs"       LOC = "V2"       |IOSTANDARD =  DIFF_SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_UDQS_P)
 NET "mcb3_dram_udqs_n"     LOC = "V1"       |IOSTANDARD =  DIFF_SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_UDQS_N)
 NET "mcb3_dram_we_n"       LOC = "H2"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_WE_N)
-#NET "mcb3_dram_reset_n"    LOC = "E3"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_RESET_N)
+NET "mcb3_dram_reset_n"    LOC = "E3"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;     #                      (/DDR3/DDR0_RESET_N)
 NET "mcb3_rzq"             LOC = "R7"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;
 NET "mcb3_zio"             LOC = "K7"       |IOSTANDARD =       SSTL15_II |OUT_TERM = UNTUNED_50;
 

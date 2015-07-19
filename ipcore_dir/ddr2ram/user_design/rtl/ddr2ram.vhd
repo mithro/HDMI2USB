@@ -126,6 +126,7 @@ generic
    mcb3_dram_dqs_n                         : inout  std_logic;
    mcb3_dram_ck                            : out std_logic;
    mcb3_dram_ck_n                          : out std_logic;
+   clk_img                                 : out std_logic;
    c3_p2_cmd_clk                           : in std_logic;
    c3_p2_cmd_en                            : in std_logic;
    c3_p2_cmd_instr                         : in std_logic_vector(2 downto 0);
@@ -171,6 +172,7 @@ component memc3_infrastructure is
       C_CLKOUT1_DIVIDE     : integer;
       C_CLKOUT2_DIVIDE     : integer;
       C_CLKOUT3_DIVIDE     : integer;
+      C_CLKOUT4_DIVIDE     : integer;
       C_CLKFBOUT_MULT      : integer;
       C_DIVCLK_DIVIDE      : integer;
       C_INCLK_PERIOD       : integer
@@ -182,6 +184,7 @@ component memc3_infrastructure is
       sys_clk                                : in    std_logic;
       sys_rst_i                              : in    std_logic;
       clk0                                   : out   std_logic;
+      clk_img                                : out   std_logic;
       rst0                                   : out   std_logic;
       async_rst                              : out   std_logic;
       sysclk_2x                              : out   std_logic;
@@ -346,6 +349,7 @@ component memc3_wrapper is
    constant C3_CLKOUT1_DIVIDE       : integer := 1; 
    constant C3_CLKOUT2_DIVIDE       : integer := 16; 
    constant C3_CLKOUT3_DIVIDE       : integer := 8; 
+   constant C3_CLKOUT4_DIVIDE       : integer := 25; -- img clock divider
    constant C3_CLKFBOUT_MULT        : integer := 2; 
    constant C3_DIVCLK_DIVIDE        : integer := 1; 
    constant C3_INCLK_PERIOD         : integer := ((C3_MEMCLK_PERIOD * C3_CLKFBOUT_MULT) / (C3_DIVCLK_DIVIDE * C3_CLKOUT0_DIVIDE * 2)); 
@@ -454,6 +458,7 @@ generic map
    C_CLKOUT1_DIVIDE                  => C3_CLKOUT1_DIVIDE,
    C_CLKOUT2_DIVIDE                  => C3_CLKOUT2_DIVIDE,
    C_CLKOUT3_DIVIDE                  => C3_CLKOUT3_DIVIDE,
+   C_CLKOUT4_DIVIDE                  => C3_CLKOUT4_DIVIDE,
    C_CLKFBOUT_MULT                   => C3_CLKFBOUT_MULT,
    C_DIVCLK_DIVIDE                   => C3_DIVCLK_DIVIDE,
    C_INCLK_PERIOD                    => C3_INCLK_PERIOD
@@ -465,6 +470,7 @@ port map
    sys_clk                         => c3_sys_clk,
    sys_rst_i                       => c3_sys_rst_i,
    clk0                            => c3_clk0,
+   clk_img                         => clk_img,
    rst0                            => c3_rst0,
    async_rst                       => c3_async_rst,
    sysclk_2x                       => c3_sysclk_2x,

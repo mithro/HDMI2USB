@@ -36,7 +36,7 @@ generic(
     C3_P0_DATA_PORT_SIZE      : integer := 32;
     C3_P1_MASK_SIZE           : integer := 4;
     C3_P1_DATA_PORT_SIZE      : integer := 32;
-    C3_MEMCLK_PERIOD          : integer := 3200;
+    C3_MEMCLK_PERIOD          : integer := 3000;
     C3_RST_ACT_LOW            : integer := 0;
     C3_INPUT_CLK_TYPE         : string := "SINGLE_ENDED";
     C3_CALIB_SOFT_IP          : string := "TRUE";
@@ -44,7 +44,7 @@ generic(
     DEBUG_EN                  : integer := 0;
     C3_MEM_ADDR_ORDER         : string := "ROW_BANK_COLUMN";
     C3_NUM_DQ_PINS            : integer := 16;
-    C3_MEM_ADDR_WIDTH         : integer := 13;
+    C3_MEM_ADDR_WIDTH         : integer := 14;
     C3_MEM_BANKADDR_WIDTH     : integer := 3
 );
 port(
@@ -64,6 +64,7 @@ port(
 	mcb3_zio                                : inout  std_logic;
 	mcb3_dram_udm                           : out std_logic;
 	mcb3_dram_odt                           : out std_logic;
+	mcb3_dram_reset_n                       : out std_logic;
 	mcb3_dram_dqs                           : inout  std_logic;
 	mcb3_dram_dqs_n                         : inout  std_logic;
 	mcb3_dram_ck                            : out std_logic;
@@ -97,7 +98,7 @@ component ddr2ram
     C3_P0_DATA_PORT_SIZE      : integer := 32;
     C3_P1_MASK_SIZE           : integer := 4;
     C3_P1_DATA_PORT_SIZE      : integer := 32;
-    C3_MEMCLK_PERIOD          : integer := 3200;
+    C3_MEMCLK_PERIOD          : integer := 3000;
     C3_RST_ACT_LOW            : integer := 0;
     C3_INPUT_CLK_TYPE         : string := "SINGLE_ENDED";
     C3_CALIB_SOFT_IP          : string := "TRUE";
@@ -105,7 +106,7 @@ component ddr2ram
     DEBUG_EN                  : integer := 0;
     C3_MEM_ADDR_ORDER         : string := "ROW_BANK_COLUMN";
     C3_NUM_DQ_PINS            : integer := 16;
-    C3_MEM_ADDR_WIDTH         : integer := 13;
+    C3_MEM_ADDR_WIDTH         : integer := 14;
     C3_MEM_BANKADDR_WIDTH     : integer := 3
 );
     port (
@@ -116,6 +117,7 @@ component ddr2ram
    mcb3_dram_cas_n                         : out std_logic;
    mcb3_dram_we_n                          : out std_logic;
    mcb3_dram_odt                           : out std_logic;
+   mcb3_dram_reset_n                       : out std_logic;
    mcb3_dram_cke                           : out std_logic;
    mcb3_dram_dm                            : out std_logic;
    mcb3_dram_udqs                          : inout  std_logic;
@@ -132,7 +134,7 @@ component ddr2ram
    mcb3_dram_dqs_n                         : inout  std_logic;
    mcb3_dram_ck                            : out std_logic;
    mcb3_dram_ck_n                          : out std_logic;
-   clk_img 			                       : out std_logic;
+   clk_img                                 : out std_logic;
    c3_p2_cmd_clk                           : in std_logic;
    c3_p2_cmd_en                            : in std_logic;
    c3_p2_cmd_instr                         : in std_logic_vector(2 downto 0);
@@ -633,6 +635,7 @@ mcb3_dram_ras_n    	=>    mcb3_dram_ras_n,
 mcb3_dram_cas_n    	=>    mcb3_dram_cas_n,                        
 mcb3_dram_we_n     	=>    mcb3_dram_we_n,                          
 mcb3_dram_odt    	=>    mcb3_dram_odt,
+mcb3_dram_reset_n    	=>    mcb3_dram_reset_n,
 mcb3_dram_cke      	=>    mcb3_dram_cke,                          
 mcb3_dram_ck       	=>    mcb3_dram_ck,                          
 mcb3_dram_ck_n     	=>    mcb3_dram_ck_n,       

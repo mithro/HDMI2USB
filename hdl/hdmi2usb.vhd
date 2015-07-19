@@ -69,7 +69,7 @@ generic (
     C3_P0_DATA_PORT_SIZE      : integer := 32;
     C3_P1_MASK_SIZE           : integer := 4;
     C3_P1_DATA_PORT_SIZE      : integer := 32;
-    C3_MEMCLK_PERIOD          : integer := 3200;
+    C3_MEMCLK_PERIOD          : integer := 3000;
     C3_RST_ACT_LOW            : integer := 0;
     C3_INPUT_CLK_TYPE         : string := "SINGLE_ENDED";
     C3_CALIB_SOFT_IP          : string := "TRUE";
@@ -77,7 +77,7 @@ generic (
     DEBUG_EN                  : integer := 0;
     C3_MEM_ADDR_ORDER         : string := "ROW_BANK_COLUMN";
     C3_NUM_DQ_PINS            : integer := 16;
-    C3_MEM_ADDR_WIDTH         : integer := 13;
+    C3_MEM_ADDR_WIDTH         : integer := 14;
     C3_MEM_BANKADDR_WIDTH     : integer := 3
 );
 
@@ -129,7 +129,7 @@ port
 
 	-- DDR2 RAM
 	mcb3_dram_dq 	: inout std_logic_vector(15 downto 0);
-	mcb3_dram_a 	: out std_logic_vector(12 downto 0);
+	mcb3_dram_a 	: out std_logic_vector(13 downto 0);
 	mcb3_dram_ba 	: out std_logic_vector(2 downto 0);
 	mcb3_dram_ras_n : out std_logic;
 	mcb3_dram_cas_n	: out std_logic;
@@ -142,6 +142,7 @@ port
 	mcb3_zio		: inout std_logic;
 	mcb3_dram_udm	: out std_logic;
 	mcb3_dram_odt	: out std_logic;
+	mcb3_dram_reset_n	: out std_logic;
 	mcb3_dram_dqs	: inout std_logic;
 	mcb3_dram_dqs_n	: inout std_logic;
 	mcb3_dram_ck	: out std_logic;
@@ -373,6 +374,7 @@ ddr2_comp : entity work.image_buffer
 		     mcb3_zio         => mcb3_zio,
 		     mcb3_dram_udm    => mcb3_dram_udm,
 		     mcb3_dram_odt    => mcb3_dram_odt,
+		     mcb3_dram_reset_n => mcb3_dram_reset_n,
 		     mcb3_dram_dqs    => mcb3_dram_dqs,
 		     mcb3_dram_dqs_n  => mcb3_dram_dqs_n,
 		     mcb3_dram_ck     => mcb3_dram_ck,
