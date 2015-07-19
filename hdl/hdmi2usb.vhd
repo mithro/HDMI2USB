@@ -109,14 +109,14 @@ port
 	--sda_lcd1 	: inout std_logic; -- DDC sda connected with LCD
 	hpd_lcd1	: out std_logic;
 
-	btnc 		: in std_logic;
-	btnu		: in std_logic; 
-	btnl		: in std_logic;
-	btnr		: in std_logic; 
-	btnd		: in std_logic; 
+	--btnc 		: in std_logic;
+	--btnu		: in std_logic;
+	--btnl		: in std_logic;
+	--btnr		: in std_logic;
+	--btnd		: in std_logic;
 
-	LED 		: out std_logic_vector(7 downto 0);
-	sw 			: in std_logic_vector(7 downto 0);
+	--LED 		: out std_logic_vector(7 downto 0);
+	--sw 			: in std_logic_vector(7 downto 0);
 
 	-- USB Chip
 	fdata 		: inout std_logic_vector(7 downto 0); 
@@ -166,6 +166,13 @@ end entity hdmi2usb;
 architecture rtl of hdmi2usb is 
 
 
+signal btnc : std_logic;
+signal btnu : std_logic;
+signal btnl : std_logic;
+signal btnr : std_logic;
+signal btnd : std_logic;
+signal LED : std_logic_vector(7 downto 0);
+signal sw : std_logic_vector(7 downto 0);
 
 signal de_H : std_logic;
 signal de : std_logic;
@@ -280,6 +287,13 @@ hpd_pc0 <= '1';
 hpd_pc1 <= '1';
 hpd_lcd0 <= '1';
 hpd_lcd1 <= '1';
+
+btnc <= '0';
+btnu <= '0';
+btnl <= '0';
+btnr <= '0';
+btnd <= '0';
+sw <= "00000000";
 
 rst <= not rst_n;
 slcs <= '0';
