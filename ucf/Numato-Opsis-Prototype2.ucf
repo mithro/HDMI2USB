@@ -7,10 +7,13 @@ CONFIG VCCAUX = 3.3;
 
 # FXO-HC536R - component U17
 NET "clk"                  LOC =   "AB13" |IOSTANDARD = LVCMOS33;     #                      (/FPGA_Bank_1_2/USRCLK)
-NET "rst_n"                LOC =     "Y3" |IOSTANDARD = LVCMOS15;
 
 NET "clk" TNM_NET = clk;
 TIMESPEC TS_clk = PERIOD "clk" 10 ns HIGH 50%;
+
+#NET "???"                  LOC =     "Y3"       |IOSTANDARD =            None;     #                      (/FPGA_Bank_0_3/SWITCH | Net-(R54-Pad2))
+NET "rst_n"                LOC =     "Y3" |IOSTANDARD = LVCMOS15 | PULLUP;
+
 
 #
 #INST "img_sel_comp/BUFGMUX_HDMI" TIG;
