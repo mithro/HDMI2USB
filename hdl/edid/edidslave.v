@@ -28,8 +28,12 @@
 ///
 //////////////////////////////////////////////////////////////////////////////
 /*!
- EDID Slave for communication with PC. dvi_only signal will select which rom to send to pc depending on the monitor connected.
- if no monitor is connected only dvi rom is transmitted. 
+EDID Slave for communication with PC. 
+
+dvi_only signal will select which ROM to send to pc depending on the monitor
+connected. 
+
+If no monitor is connected only DVI ROM is transmitted.
 */
 
 module edidslave (rst_n,clk,sda,scl,dvi_only);
@@ -40,29 +44,27 @@ inout sda;
 input dvi_only;
 
 
-// edid rom -------------------------------------------------------------------------
+// EDID ROM -------------------------------------------------------------------------
 reg [7:0] adr;
 wire [7:0] data;
 edidrom edid_rom(clk,adr,data);
 
-// hdmi rom -------------------------------------------------------------------------
+// HDMI ROM -------------------------------------------------------------------------
 wire [7:0] data_hdmi;
 hdmirom hdmi_rom(clk,adr,data_hdmi);
 
 
-// i2c slave signals ----------------------------------------------------------------
+// I2C slave signals ----------------------------------------------------------------
 wire sdain;
 reg sdaout;
 assign sda = (sdaout == 1'b0) ? 1'b0 : 1'bz;
 assign sdain = sda;
 
-
-
-// state machine --------------------------------------------------------------------
+// State machine --------------------------------------------------------------------
 parameter INI = 0;
 parameter WAIT_FOR_START = 1;
 parameter READ_ADDRESS = 2;
-parameter SEND_ADDRESS_ACK = 3; // address A0
+parameter SEND_ADDRESS_ACK = 3; // Address A0
 parameter READ_REGISTER_ADDRESS = 4;
 parameter SEND_REGISTER_ADDRESS_ACK = 5;
 
@@ -72,7 +74,7 @@ parameter SEND_ADDRESS_ACK_AGAIN = 8; // Address A1
 
 parameter WRITE_BYTE = 9;
 parameter FREE_SDA = 10;
-parameter WAIT_WRITE_BYTE_ACK = 11; // also check for end of transmition // repeate etc etc
+parameter WAIT_WRITE_BYTE_ACK = 11; // Also check for end of transition, repeat, etc.
 
 parameter RELEASE_SEND_REGISTER_ADDRESS_ACK = 12; 
 parameter RELESASE_ADDRESS_ACK = 13; 
@@ -82,7 +84,9 @@ parameter RELEASE_SEND_ADDRESS_ACK_AGAIN = 14;
 reg [3:0] state;
 wire scl_risingedge,scl_fallingedge, start, stop;
 reg [2:0] bitcount;
-reg [7:0] sdadata; //% address confirmations is not implemeted yet // need to think about it in future. // before sending ack check the address
+reg [7:0] sdadata; 
+//% address confirmations are not implemented yet need to think about it in
+//future. Before sending ack, check the address.
 reg [7:0] scl_debounce;
 //reg [15:0] sda_debounce;
 reg scl_stable;
