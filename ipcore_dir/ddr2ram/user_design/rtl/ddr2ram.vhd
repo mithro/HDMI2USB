@@ -52,7 +52,7 @@
 -- \   \   \/     Version            : 3.92
 --  \   \         Application        : MIG
 --  /   /         Filename           : ddr2ram.vhd
--- /___/   /\     Date Last Modified : $Date: 2011/06/02 07:16:56 $
+-- /___/   /\     Date Last Modified : $Date: 2011/06/02 07:16:59 $
 -- \   \  /  \    Date Created       : Jul 03 2009
 --  \___\/\___\
 --
@@ -72,7 +72,7 @@ generic
           C3_P0_DATA_PORT_SIZE      : integer := 32;
           C3_P1_MASK_SIZE           : integer := 4;
           C3_P1_DATA_PORT_SIZE      : integer := 32;
-    C3_MEMCLK_PERIOD        : integer := 3200; 
+    C3_MEMCLK_PERIOD        : integer := 3000; 
                                        -- Memory data transfer clock period.
     C3_RST_ACT_LOW          : integer := 0; 
                                        -- # = 1 for active low reset,
@@ -93,7 +93,7 @@ generic
                                        -- ROW_BANK_COLUMN or BANK_ROW_COLUMN.
     C3_NUM_DQ_PINS          : integer := 16; 
                                        -- External memory data width.
-    C3_MEM_ADDR_WIDTH       : integer := 13; 
+    C3_MEM_ADDR_WIDTH       : integer := 14; 
                                        -- External memory address width.
     C3_MEM_BANKADDR_WIDTH   : integer := 3 
                                        -- External memory bank address width.
@@ -109,6 +109,7 @@ generic
    mcb3_dram_cas_n                         : out std_logic;
    mcb3_dram_we_n                          : out std_logic;
    mcb3_dram_odt                           : out std_logic;
+   mcb3_dram_reset_n                       : out std_logic;
    mcb3_dram_cke                           : out std_logic;
    mcb3_dram_dm                            : out std_logic;
    mcb3_dram_udqs                          : inout  std_logic;
@@ -125,7 +126,6 @@ generic
    mcb3_dram_dqs_n                         : inout  std_logic;
    mcb3_dram_ck                            : out std_logic;
    mcb3_dram_ck_n                          : out std_logic;
-   clk_img 			                       : out std_logic;   
    c3_p2_cmd_clk                           : in std_logic;
    c3_p2_cmd_en                            : in std_logic;
    c3_p2_cmd_instr                         : in std_logic_vector(2 downto 0);
@@ -163,7 +163,6 @@ end ddr2ram;
 architecture arc of ddr2ram is
 
  
-
 component memc3_infrastructure is
     generic (
       C_RST_ACT_LOW        : integer;
@@ -172,7 +171,6 @@ component memc3_infrastructure is
       C_CLKOUT1_DIVIDE     : integer;
       C_CLKOUT2_DIVIDE     : integer;
       C_CLKOUT3_DIVIDE     : integer;
-      C_CLKOUT4_DIVIDE     : integer;
       C_CLKFBOUT_MULT      : integer;
       C_DIVCLK_DIVIDE      : integer;
       C_INCLK_PERIOD       : integer
@@ -184,7 +182,6 @@ component memc3_infrastructure is
       sys_clk                                : in    std_logic;
       sys_rst_i                              : in    std_logic;
       clk0                                   : out   std_logic;
-      clk_img                                : out   std_logic;
       rst0                                   : out   std_logic;
       async_rst                              : out   std_logic;
       sysclk_2x                              : out   std_logic;
@@ -247,7 +244,6 @@ component memc3_wrapper is
       C_MEM_DDR3_RTT       : string;
       C_MEM_DDR3_CAS_WR_LATENCY   : integer;
       C_MEM_DDR3_AUTO_SR   : string;
-      C_MEM_DDR3_DYN_WRT_ODT   : string;
       C_MEM_MOBILE_PA_SR   : string;
       C_MEM_MDDR_ODS       : string;
       C_MC_CALIB_BYPASS    : string;
@@ -284,6 +280,7 @@ component memc3_wrapper is
       mcb3_dram_cas_n                        : out  std_logic;
       mcb3_dram_we_n                         : out  std_logic;
       mcb3_dram_odt                          : out  std_logic;
+      mcb3_dram_reset_n                      : out  std_logic;
       mcb3_dram_cke                          : out  std_logic;
       mcb3_dram_dm                           : out  std_logic;
       mcb3_dram_udqs                         : inout  std_logic;
@@ -347,11 +344,10 @@ component memc3_wrapper is
 
    constant C3_CLKOUT0_DIVIDE       : integer := 1; 
    constant C3_CLKOUT1_DIVIDE       : integer := 1; 
-   constant C3_CLKOUT2_DIVIDE       : integer := 8; 
-   constant C3_CLKOUT3_DIVIDE       : integer := 4; 
-   constant C3_CLKOUT4_DIVIDE       : integer := 25; -- img clock divider 
-   constant C3_CLKFBOUT_MULT        : integer := 25; 
-   constant C3_DIVCLK_DIVIDE        : integer := 4; 
+   constant C3_CLKOUT2_DIVIDE       : integer := 16; 
+   constant C3_CLKOUT3_DIVIDE       : integer := 8; 
+   constant C3_CLKFBOUT_MULT        : integer := 2; 
+   constant C3_DIVCLK_DIVIDE        : integer := 1; 
    constant C3_INCLK_PERIOD         : integer := ((C3_MEMCLK_PERIOD * C3_CLKFBOUT_MULT) / (C3_DIVCLK_DIVIDE * C3_CLKOUT0_DIVIDE * 2)); 
    constant C3_ARB_NUM_TIME_SLOTS   : integer := 12; 
    constant C3_ARB_TIME_SLOT_0      : bit_vector(5 downto 0) := o"23"; 
@@ -366,18 +362,18 @@ component memc3_wrapper is
    constant C3_ARB_TIME_SLOT_9      : bit_vector(5 downto 0) := o"32"; 
    constant C3_ARB_TIME_SLOT_10     : bit_vector(5 downto 0) := o"23"; 
    constant C3_ARB_TIME_SLOT_11     : bit_vector(5 downto 0) := o"32"; 
-   constant C3_MEM_TRAS             : integer := 42500; 
-   constant C3_MEM_TRCD             : integer := 12500; 
+   constant C3_MEM_TRAS             : integer := 35000; 
+   constant C3_MEM_TRCD             : integer := 13750; 
    constant C3_MEM_TREFI            : integer := 7800000; 
-   constant C3_MEM_TRFC             : integer := 127500; 
-   constant C3_MEM_TRP              : integer := 12500; 
+   constant C3_MEM_TRFC             : integer := 160000; 
+   constant C3_MEM_TRP              : integer := 13750; 
    constant C3_MEM_TWR              : integer := 15000; 
    constant C3_MEM_TRTP             : integer := 7500; 
    constant C3_MEM_TWTR             : integer := 7500; 
-   constant C3_MEM_TYPE             : string := "DDR2"; 
-   constant C3_MEM_DENSITY          : string := "1Gb"; 
-   constant C3_MEM_BURST_LEN        : integer := 4; 
-   constant C3_MEM_CAS_LATENCY      : integer := 5; 
+   constant C3_MEM_TYPE             : string := "DDR3"; 
+   constant C3_MEM_DENSITY          : string := "2Gb"; 
+   constant C3_MEM_BURST_LEN        : integer := 8; 
+   constant C3_MEM_CAS_LATENCY      : integer := 6; 
    constant C3_MEM_NUM_COL_BITS     : integer := 10; 
    constant C3_MEM_DDR1_2_ODS       : string := "FULL"; 
    constant C3_MEM_DDR2_RTT         : string := "50OHMS"; 
@@ -386,10 +382,9 @@ component memc3_wrapper is
    constant C3_MEM_DDR2_3_HIGH_TEMP_SR  : string := "NORMAL"; 
    constant C3_MEM_DDR3_CAS_LATENCY  : integer := 6; 
    constant C3_MEM_DDR3_ODS         : string := "DIV6"; 
-   constant C3_MEM_DDR3_RTT         : string := "DIV2"; 
+   constant C3_MEM_DDR3_RTT         : string := "DIV4"; 
    constant C3_MEM_DDR3_CAS_WR_LATENCY  : integer := 5; 
    constant C3_MEM_DDR3_AUTO_SR     : string := "ENABLED"; 
-   constant C3_MEM_DDR3_DYN_WRT_ODT  : string := "OFF"; 
    constant C3_MEM_MOBILE_PA_SR     : string := "FULL"; 
    constant C3_MEM_MDDR_ODS         : string := "FULL"; 
    constant C3_MC_CALIB_BYPASS      : string := "NO"; 
@@ -448,6 +443,7 @@ begin
 c3_sys_clk_p <= '0';
 c3_sys_clk_n <= '0';
 c3_selfrefresh_enter <= '0';
+c3_selfrefresh_enter <= '0';
 memc3_infrastructure_inst : memc3_infrastructure
 
 generic map
@@ -458,7 +454,6 @@ generic map
    C_CLKOUT1_DIVIDE                  => C3_CLKOUT1_DIVIDE,
    C_CLKOUT2_DIVIDE                  => C3_CLKOUT2_DIVIDE,
    C_CLKOUT3_DIVIDE                  => C3_CLKOUT3_DIVIDE,
-   C_CLKOUT4_DIVIDE                  => C3_CLKOUT4_DIVIDE,
    C_CLKFBOUT_MULT                   => C3_CLKFBOUT_MULT,
    C_DIVCLK_DIVIDE                   => C3_DIVCLK_DIVIDE,
    C_INCLK_PERIOD                    => C3_INCLK_PERIOD
@@ -470,7 +465,6 @@ port map
    sys_clk                         => c3_sys_clk,
    sys_rst_i                       => c3_sys_rst_i,
    clk0                            => c3_clk0,
-   clk_img						   => clk_img,
    rst0                            => c3_rst0,
    async_rst                       => c3_async_rst,
    sysclk_2x                       => c3_sysclk_2x,
@@ -481,7 +475,7 @@ port map
    mcb_drp_clk                     => c3_mcb_drp_clk
    );
 
-
+ 
 -- wrapper instantiation
  memc3_wrapper_inst : memc3_wrapper
 
@@ -534,7 +528,6 @@ generic map
    C_MEM_DDR3_RTT                    => C3_MEM_DDR3_RTT,
    C_MEM_DDR3_CAS_WR_LATENCY         => C3_MEM_DDR3_CAS_WR_LATENCY,
    C_MEM_DDR3_AUTO_SR                => C3_MEM_DDR3_AUTO_SR,
-   C_MEM_DDR3_DYN_WRT_ODT            => C3_MEM_DDR3_DYN_WRT_ODT,
    C_MEM_MOBILE_PA_SR                => C3_MEM_MOBILE_PA_SR,
    C_MEM_MDDR_ODS                    => C3_MEM_MDDR_ODS,
    C_MC_CALIB_BYPASS                 => C3_MC_CALIB_BYPASS,
@@ -572,6 +565,7 @@ port map
    mcb3_dram_cas_n                      => mcb3_dram_cas_n,
    mcb3_dram_we_n                       => mcb3_dram_we_n,
    mcb3_dram_odt                        => mcb3_dram_odt,
+   mcb3_dram_reset_n                    => mcb3_dram_reset_n,
    mcb3_dram_cke                        => mcb3_dram_cke,
    mcb3_dram_dm                         => mcb3_dram_dm,
    mcb3_dram_udqs                       => mcb3_dram_udqs,

@@ -52,8 +52,8 @@
 -- \   \   \/     Version            : 3.92
 --  \   \         Application        : MIG
 --  /   /         Filename           : memc3_wrapper.vhd
--- /___/   /\     Date Last Modified : $Date: 2011/06/02 07:16:57 $
--- \   \  /  \    Date Created       : Jul 03 2009
+-- /___/   /\     Date Last Modified : $Date: 2011/06/02 07:16:59 $
+-- \   \  /  \    Date Created       :
 --  \___\/\___\
 --
 --Device           : Spartan-6
@@ -120,9 +120,9 @@ generic (
       C_MEM_DDR3_ODS            : string := "DIV6";
       C_MEM_DDR3_RTT            : string := "DIV2";
       C_MEM_DDR3_AUTO_SR        : string := "ENABLED";
-      C_MEM_DDR3_DYN_WRT_ODT    : string := "OFF";
       C_MEM_MOBILE_PA_SR        : string := "FULL";
       C_MEM_MDDR_ODS            : string := "FULL";
+
       C_MC_CALIB_BYPASS         : string := "NO";
       C_LDQSP_TAP_DELAY_VAL		: integer := 0;
       C_UDQSP_TAP_DELAY_VAL		: integer := 0;
@@ -223,14 +223,12 @@ generic (
       mcb3_dram_cke         : out std_logic;
       mcb3_dram_dq          : inout std_logic_vector(C_NUM_DQ_PINS-1 downto 0);
       mcb3_dram_dqs         : inout std_logic;
- mcb3_dram_dqs_n : inout std_logic;
-
+      mcb3_dram_dqs_n       : inout std_logic;
+      mcb3_dram_reset_n     : out std_logic;
 
 mcb3_dram_udqs   : inout std_logic;
+mcb3_dram_udqs_n : inout std_logic;
 mcb3_dram_udm    : out std_logic; 
-
-
- mcb3_dram_udqs_n : inout std_logic;
 
 
 
@@ -238,6 +236,7 @@ mcb3_dram_dm : out std_logic;
 
       mcb3_rzq                             : inout std_logic;
       mcb3_zio                              : inout std_logic;
+
 
       -- Calibration signals
       mcb_drp_clk            : in std_logic;
@@ -314,26 +313,26 @@ component mcb_raw_wrapper IS
       C_MC_CALIBRATION_MODE            : string;
       C_MC_CALIBRATION_DELAY           : string;
 
-     LDQSP_TAP_DELAY_VAL		: integer;
-     UDQSP_TAP_DELAY_VAL		: integer;
-     LDQSN_TAP_DELAY_VAL		: integer;
-     UDQSN_TAP_DELAY_VAL		: integer;
-     DQ0_TAP_DELAY_VAL                  : integer;  
-     DQ1_TAP_DELAY_VAL                  : integer;  
-     DQ2_TAP_DELAY_VAL                  : integer;  
-     DQ3_TAP_DELAY_VAL                  : integer;  
-     DQ4_TAP_DELAY_VAL                  : integer;  
-     DQ5_TAP_DELAY_VAL                  : integer;  
-     DQ6_TAP_DELAY_VAL                  : integer;  
-     DQ7_TAP_DELAY_VAL                  : integer;  
-     DQ8_TAP_DELAY_VAL                  : integer;  
-     DQ9_TAP_DELAY_VAL                  : integer;  
-     DQ10_TAP_DELAY_VAL                  : integer;  
-     DQ11_TAP_DELAY_VAL                  : integer;  
-     DQ12_TAP_DELAY_VAL                  : integer;  
-     DQ13_TAP_DELAY_VAL                  : integer;  
-     DQ14_TAP_DELAY_VAL                  : integer;  
-     DQ15_TAP_DELAY_VAL                  : integer;  
+      LDQSP_TAP_DELAY_VAL		: integer;
+      UDQSP_TAP_DELAY_VAL		: integer;
+      LDQSN_TAP_DELAY_VAL		: integer;
+      UDQSN_TAP_DELAY_VAL		: integer;
+      DQ0_TAP_DELAY_VAL                 : integer;  
+      DQ1_TAP_DELAY_VAL                 : integer;  
+      DQ2_TAP_DELAY_VAL                 : integer;  
+      DQ3_TAP_DELAY_VAL                 : integer;  
+      DQ4_TAP_DELAY_VAL                 : integer;  
+      DQ5_TAP_DELAY_VAL                 : integer;  
+      DQ6_TAP_DELAY_VAL                 : integer;  
+      DQ7_TAP_DELAY_VAL                 : integer;  
+      DQ8_TAP_DELAY_VAL                 : integer;  
+      DQ9_TAP_DELAY_VAL                 : integer;  
+      DQ10_TAP_DELAY_VAL                : integer;  
+      DQ11_TAP_DELAY_VAL                : integer;  
+      DQ12_TAP_DELAY_VAL                : integer;  
+      DQ13_TAP_DELAY_VAL                : integer;  
+      DQ14_TAP_DELAY_VAL                : integer;  
+      DQ15_TAP_DELAY_VAL                : integer;  
 
       C_P0_MASK_SIZE                   : integer;
       C_P0_DATA_PORT_SIZE              : integer;
@@ -585,11 +584,12 @@ constant ARB_TIME_SLOT_11   : bit_vector(17 downto 0) := ("000" & "000" & "000" 
 
 constant C_MC_CALIBRATION_CLK_DIV  : integer  := 1;
 constant C_MEM_TZQINIT_MAXCNT  : std_logic_vector(9 downto 0) := "1000000000" + "0000010000";   -- 16 cycles are added to avoid trfc violations
-constant C_SKIP_DYN_IN_TERM : integer := 1;	  
+constant  C_SKIP_DYN_IN_TERM : integer := 1;	  
 
 constant C_MC_CALIBRATION_RA    : bit_vector(15 downto 0) := X"0000"; 
 constant C_MC_CALIBRATION_BA    : bit_vector(2 downto 0) := o"0"; 
-constant C_MC_CALIBRATION_CA    : bit_vector(11 downto 0) := X"000"; 
+constant C_MC_CALIBRATION_CA    : bit_vector(11 downto 0) := X"000";
+constant C_MEM_DDR3_DYN_WRT_ODT : string := "OFF";
 
 signal status          : std_logic_vector(31 downto 0);
 signal uo_data_valid   : std_logic;
@@ -601,15 +601,12 @@ signal uo_sdo          : std_logic;
 
 
 
-
-
-
 attribute X_CORE_INFO : string;
 attribute X_CORE_INFO of acch : architecture IS
-  "mig_v3_92_ddr2_s6, Coregen 14.2";
+  "mig_v3_92_ddr3_s6, Coregen 14.7";
 
 attribute CORE_GENERATION_INFO : string;
-attribute CORE_GENERATION_INFO of acch : architecture IS "mcb3_ddr2_s6,mig_v3_92,{LANGUAGE=VHDL, SYNTHESIS_TOOL=ISE,  NO_OF_CONTROLLERS=1, AXI_ENABLE=0, MEM_INTERFACE_TYPE=DDR2_SDRAM, CLK_PERIOD=3200, MEMORY_PART=mt47h64m16xx-25e, MEMORY_DEVICE_WIDTH=16, OUTPUT_DRV=FULL, RTT_NOM=50OHMS, DQS#_ENABLE=YES, HIGH_TEMP_SR=NORMAL, PORT_CONFIG=Two 32-bit bi-directional and four 32-bit unidirectional ports, MEM_ADDR_ORDER=ROW_BANK_COLUMN, PORT_ENABLE=Port2_Port3, CLASS_ADDR=II, CLASS_DATA=II, INPUT_PIN_TERMINATION=CALIB_TERM, DATA_TERMINATION=25 Ohms, CLKFBOUT_MULT_F=2, CLKOUT_DIVIDE=1, DEBUG_PORT=0, INPUT_CLK_TYPE=Single-Ended}";
+attribute CORE_GENERATION_INFO of acch : architecture IS "mcb3_ddr3_s6,mig_v3_92,{LANGUAGE=VHDL, SYNTHESIS_TOOL=ISE,  NO_OF_CONTROLLERS=1, AXI_ENABLE=0, MEM_INTERFACE_TYPE=DDR3_SDRAM, CLK_PERIOD=3000, MEMORY_PART=mt41j128m16xx-125, MEMORY_DEVICE_WIDTH=16, OUTPUT_DRV=DIV6, RTT_NOM=DIV4, AUTO_SR=ENABLED, HIGH_TEMP_SR=NORMAL, PORT_CONFIG=Two 32-bit bi-directional and four 32-bit unidirectional ports, MEM_ADDR_ORDER=ROW_BANK_COLUMN, PORT_ENABLE=Port2_Port3, INPUT_PIN_TERMINATION=CALIB_TERM, DATA_TERMINATION=25 Ohms, CLKFBOUT_MULT_F=2, CLKOUT_DIVIDE=1, DEBUG_PORT=0, INPUT_CLK_TYPE=Single-Ended}";
 
 begin
 
@@ -735,7 +732,7 @@ port map
    mcbx_dram_dqs_n            =>  mcb3_dram_dqs_n,
    mcbx_dram_udqs             =>  mcb3_dram_udqs,
    mcbx_dram_udqs_n           =>  mcb3_dram_udqs_n,
-   mcbx_dram_ddr3_rst         =>  open,
+   mcbx_dram_ddr3_rst         =>  mcb3_dram_reset_n,
    calib_recal                =>  '0',
    rzq                        =>  mcb3_rzq,
    zio                        =>  mcb3_zio,

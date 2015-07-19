@@ -52,7 +52,7 @@
 -- \   \   \/    Version            : 3.92
 --  \   \        Application        : MIG
 --  /   /        Filename           : sim_tb_top.vhd
--- /___/   /\    Date Last Modified : $Date: 2011/06/02 07:16:56 $
+-- /___/   /\    Date Last Modified : $Date: 2011/06/02 07:16:58 $
 -- \   \  /  \   Date Created       : Jul 03 2009
 --  \___\/\___\
 --
@@ -82,7 +82,7 @@ architecture arch of sim_tb_top is
 -- ========================================================================== --
 -- Parameters                                                                 --
 -- ========================================================================== --
-   constant DEBUG_EN              : integer :=0;   
+   constant DEBUG_EN              : integer :=0;
    
    constant C3_HW_TESTING      : string := "FALSE";
  
@@ -95,21 +95,21 @@ function c3_sim_hw (val1:std_logic_vector( 31 downto 0); val2: std_logic_vector(
    end if;
    end function;		
 
-   constant  C3_MEMCLK_PERIOD : integer    := 3200;
+   constant  C3_MEMCLK_PERIOD : integer    := 3000;
    constant C3_RST_ACT_LOW : integer := 0;
    constant C3_INPUT_CLK_TYPE : string := "SINGLE_ENDED";
-   constant C3_CLK_PERIOD_NS   : real := 3200.0 / 1000.0;
+   constant C3_CLK_PERIOD_NS   : real := 3000.0 / 1000.0;
    constant C3_TCYC_SYS        : real := C3_CLK_PERIOD_NS/2.0;
    constant C3_TCYC_SYS_DIV2   : time := C3_TCYC_SYS * 1 ns;
    constant C3_NUM_DQ_PINS        : integer := 16;
-   constant C3_MEM_ADDR_WIDTH     : integer := 13;
+   constant C3_MEM_ADDR_WIDTH     : integer := 14;
    constant C3_MEM_BANKADDR_WIDTH : integer := 3;   
    constant C3_MEM_ADDR_ORDER     : string := "ROW_BANK_COLUMN"; 
       constant C3_P0_MASK_SIZE : integer      := 4;
    constant C3_P0_DATA_PORT_SIZE : integer := 32;  
    constant C3_P1_MASK_SIZE   : integer    := 4;
    constant C3_P1_DATA_PORT_SIZE  : integer := 32;
-   constant C3_MEM_BURST_LEN	  : integer := 4;
+   constant C3_MEM_BURST_LEN	  : integer := 8;
    constant C3_MEM_NUM_COL_BITS   : integer := 10;
    constant C3_SIMULATION      : string := "TRUE";
    constant C3_CALIB_SOFT_IP      : string := "TRUE";
@@ -127,7 +127,6 @@ function c3_sim_hw (val1:std_logic_vector( 31 downto 0); val2: std_logic_vector(
 -- ========================================================================== --
 -- Component Declarations
 -- ========================================================================== --
-
 
 component ddr2ram is
 generic 
@@ -161,9 +160,9 @@ generic
    mcb3_dram_cke                           : out std_logic;
    mcb3_dram_dm                            : out std_logic;
       mcb3_rzq    				   : inout  std_logic;
-
+        
       mcb3_zio    				   : inout  std_logic;
-
+        
         c3_sys_clk                            : in  std_logic;
    c3_sys_rst_i                            : in  std_logic;
 	
@@ -172,15 +171,13 @@ generic
    c3_rst0                                 : out std_logic;
  
    mcb3_dram_dqs                           : inout  std_logic;
-   mcb3_dram_dqs_n : inout std_logic;
-   
-		mcb3_dram_udqs                           : inout  std_logic;
-		mcb3_dram_udqs_n : inout std_logic;
-		   
-   mcb3_dram_udm                            : out std_logic;
-		
+   mcb3_dram_dqs_n                         : inout  std_logic;
    mcb3_dram_ck                            : out std_logic;
-   mcb3_dram_ck_n                          : out std_logic;   c3_p2_cmd_clk                           : in std_logic;
+         mcb3_dram_udqs                           : inout  std_logic;
+   mcb3_dram_udqs_n                         : inout  std_logic;
+   mcb3_dram_udm                            : out std_logic;
+   mcb3_dram_ck_n                          : out std_logic;
+   mcb3_dram_reset_n                       : out std_logic;   c3_p2_cmd_clk                           : in std_logic;
    c3_p2_cmd_en                            : in std_logic;
    c3_p2_cmd_instr                         : in std_logic_vector(2 downto 0);
    c3_p2_cmd_bl                            : in std_logic_vector(5 downto 0);
@@ -215,7 +212,7 @@ generic
 end component;
 
 
-        component ddr2_model_c3 is
+        component ddr3_model_c3 is
     port (
       ck      : in    std_logic;
       ck_n    : in    std_logic;
@@ -224,14 +221,15 @@ end component;
       ras_n   : in    std_logic;
       cas_n   : in    std_logic;
       we_n    : in    std_logic;
-      dm_rdqs : inout std_logic_vector((C3_NUM_DQ_PINS/16) downto 0);
+      dm_tdqs : inout std_logic_vector((C3_NUM_DQ_PINS/16) downto 0);
       ba      : in    std_logic_vector((C3_MEM_BANKADDR_WIDTH - 1) downto 0);
       addr    : in    std_logic_vector((C3_MEM_ADDR_WIDTH  - 1) downto 0);
       dq      : inout std_logic_vector((C3_NUM_DQ_PINS - 1) downto 0);
       dqs     : inout std_logic_vector((C3_NUM_DQ_PINS/16) downto 0);
       dqs_n   : inout std_logic_vector((C3_NUM_DQ_PINS/16) downto 0);
-      rdqs_n  : out   std_logic_vector((C3_NUM_DQ_PINS/16) downto 0);
-      odt     : in    std_logic
+      tdqs_n  : out   std_logic_vector((C3_NUM_DQ_PINS/16) downto 0);
+	  odt     : in    std_logic;
+      rst_n   : in    std_logic
       );
   end component;
 component memc3_tb_top is
@@ -321,14 +319,15 @@ end component;
    signal  mcb3_dram_ck : std_logic;  
    signal  mcb3_dram_ck_n : std_logic;  
    signal  mcb3_dram_dq : std_logic_vector(C3_NUM_DQ_PINS-1 downto 0);   
-   signal  mcb3_dram_dqs   : std_logic;  
-   signal  mcb3_dram_dqs_n : std_logic;
+   signal  mcb3_dram_dqs   : std_logic;    
+   signal  mcb3_dram_dqs_n : std_logic;  
    signal  mcb3_dram_dm    : std_logic;   
    signal  mcb3_dram_ras_n : std_logic;   
    signal  mcb3_dram_cas_n : std_logic;   
    signal  mcb3_dram_we_n  : std_logic;    
    signal  mcb3_dram_cke   : std_logic;   
    signal  mcb3_dram_odt   : std_logic;  
+   signal  mcb3_dram_reset_n : std_logic; 
       signal  mcb3_dram_udqs   : std_logic;
    signal  mcb3_dram_udqs_n : std_logic;
    signal mcb3_dram_dqs_vector : std_logic_vector(1 downto 0);
@@ -337,7 +336,6 @@ end component;
    signal mcb3_dram_dm_vector : std_logic_vector(1 downto 0);
    
    
-
 -- User design  Sim
    signal  c3_clk0 : std_logic;
    signal  c3_rst0 : std_logic;  
@@ -385,7 +383,6 @@ end component;
    signal  rzq3     : std_logic;
       
    signal  zio3     : std_logic;
-      
    signal   calib_done  : std_logic;
    signal   error  : std_logic;
 
@@ -437,7 +434,7 @@ calib_done <= c3_calib_done;
 -- unknown state in simulation. In real hardware, ZIO should be a no connect(NC) pin.
    zio_pulldown3 : PULLDOWN port map(O => zio3);
    rzq_pulldown3 : PULLDOWN port map(O => rzq3);
-   
+      
 
 -- ========================================================================== --
 -- DESIGN TOP INSTANTIATION                                                    --
@@ -453,13 +450,12 @@ C3_P1_DATA_PORT_SIZE  => C3_P1_DATA_PORT_SIZE,
 	C3_MEMCLK_PERIOD  =>       C3_MEMCLK_PERIOD,
 C3_RST_ACT_LOW    =>     C3_RST_ACT_LOW,
 C3_INPUT_CLK_TYPE =>     C3_INPUT_CLK_TYPE, 
-DEBUG_EN              => DEBUG_EN,
+DEBUG_EN              =>     DEBUG_EN,
 
 C3_MEM_ADDR_ORDER     => C3_MEM_ADDR_ORDER,
 C3_NUM_DQ_PINS        => C3_NUM_DQ_PINS,
 C3_MEM_ADDR_WIDTH     => C3_MEM_ADDR_WIDTH,
 C3_MEM_BANKADDR_WIDTH => C3_MEM_BANKADDR_WIDTH,
-
 
 C3_SIMULATION   =>      C3_SIMULATION,
 
@@ -481,9 +477,10 @@ port map (
   mcb3_dram_ck       =>    mcb3_dram_ck,                          
   mcb3_dram_ck_n     =>    mcb3_dram_ck_n,       
   mcb3_dram_dqs      =>    mcb3_dram_dqs,                          
-  mcb3_dram_dqs_n  =>      mcb3_dram_dqs_n,
+  mcb3_dram_dqs_n    =>    mcb3_dram_dqs_n,
+  mcb3_dram_reset_n =>     mcb3_dram_reset_n,
   mcb3_dram_udqs  =>       mcb3_dram_udqs,    -- for X16 parts           
-  mcb3_dram_udqs_n    =>   mcb3_dram_udqs_n,  -- for X16 parts
+    mcb3_dram_udqs_n  =>       mcb3_dram_udqs_n,    -- for X16 parts
   mcb3_dram_udm  =>        mcb3_dram_udm,     -- for X16 parts
   mcb3_dram_dm  =>       mcb3_dram_dm,
     c3_clk0	=>	        c3_clk0,
@@ -491,10 +488,9 @@ port map (
 	
  
   c3_calib_done      =>    c3_calib_done,
-     mcb3_rzq        =>            rzq3,
-	
-     mcb3_zio        =>            zio3,
-	
+     mcb3_rzq         =>            rzq3,
+        
+     mcb3_zio         =>            zio3,
      c3_p2_cmd_clk                           =>  (c3_clk0),
    c3_p2_cmd_en                            =>  c3_p2_cmd_en,
    c3_p2_cmd_instr                         =>  c3_p2_cmd_instr,
@@ -634,24 +630,27 @@ port map
 
    
    
+
 mcb3_dram_dm_vector <= (mcb3_dram_udm & mcb3_dram_dm);
 
-     u_mem_c3 : ddr2_model_c3 port map(
-        ck        => mcb3_dram_ck,
-        ck_n      => mcb3_dram_ck_n,
-        cke       => mcb3_dram_cke,
-        cs_n      => '0',
-        ras_n     => mcb3_dram_ras_n,
-        cas_n     => mcb3_dram_cas_n,
-        we_n      => mcb3_dram_we_n,
-        dm_rdqs   => mcb3_dram_dm_vector ,
-        ba        => mcb3_dram_ba,
-        addr      => mcb3_dram_a,
-        dq        => mcb3_dram_dq,
-        dqs       => mcb3_dram_dqs_vector,
-        dqs_n     => mcb3_dram_dqs_n_vector,
-        rdqs_n    => open,
-        odt       => mcb3_dram_odt
+     u_mem_c3 : ddr3_model_c3 port map
+	 (
+      ck        => mcb3_dram_ck,
+      ck_n      => mcb3_dram_ck_n,
+      cke       => mcb3_dram_cke,
+      cs_n      => '0',
+      ras_n     => mcb3_dram_ras_n,
+      cas_n     => mcb3_dram_cas_n,
+      we_n      => mcb3_dram_we_n,
+      dm_tdqs   => mcb3_dram_dm_vector,
+      ba        => mcb3_dram_ba,
+      addr      => mcb3_dram_a,
+      dq        => mcb3_dram_dq,
+      dqs       => mcb3_dram_dqs_vector,
+      dqs_n     => mcb3_dram_dqs_n_vector,
+      tdqs_n    => open,
+      odt       => mcb3_dram_odt,
+      rst_n     => mcb3_dram_reset_n
       );
 
 -----------------------------------------------------------------------------     

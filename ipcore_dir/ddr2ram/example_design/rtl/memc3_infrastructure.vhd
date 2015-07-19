@@ -52,7 +52,7 @@
 -- \   \   \/     Version            : 3.92
 --  \   \         Application        : MIG
 --  /   /         Filename           : memc3_infrastructure.vhd
--- /___/   /\     Date Last Modified : $Date: 2011/06/02 07:16:56 $
+-- /___/   /\     Date Last Modified : $Date: 2011/06/02 07:16:59 $
 -- \   \  /  \    Date Created       : Jul 03 2009
 --  \___\/\___\
 --

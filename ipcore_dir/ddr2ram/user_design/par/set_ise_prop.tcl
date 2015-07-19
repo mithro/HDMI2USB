@@ -2,15 +2,15 @@ project new test.xise
 
 project set "Device Family" "spartan6"
 
-project set "Device" "xc6slx45"
+project set "Device" "xc6slx45t"
 
-project set "Package" "csg324"
+project set "Package" "fgg484"
 
 project set "Speed Grade" "-3"
 
 project set "Synthesis Tool" "XST (VHDL/Verilog)"
 
-project set "Simulator" "Modelsim-SE Mixed"
+project set "Simulator" "ISim (VHDL/Verilog)"
 
 xfile add "../rtl/ddr2ram.vhd"
 xfile add "../rtl/iodrp_controller.vhd"

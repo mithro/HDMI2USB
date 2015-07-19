@@ -52,7 +52,7 @@
 -- \   \   \/     Version            : 3.92
 --  \   \         Application        : MIG
 --  /   /         Filename           : memc3_tb_top.vhd
--- /___/   /\     Date Last Modified : $Date: 2011/06/02 07:16:56 $
+-- /___/   /\     Date Last Modified : $Date: 2011/06/02 07:16:59 $
 -- \   \  /  \    Date Created       : Jul 03 2009
 --  \___\/\___\
 --
@@ -94,9 +94,12 @@ generic
   );
 port
 (
+
    clk0            : in std_logic;
    rst0            : in std_logic;
    calib_done      : in std_logic;
+
+
       p2_mcb_cmd_en_o                           : out std_logic;
       p2_mcb_cmd_instr_o                        : out std_logic_vector(2 downto 0);
       p2_mcb_cmd_bl_o                           : out std_logic_vector(5 downto 0);
@@ -122,14 +125,19 @@ port
 
 
 
+
+
    vio_modify_enable   : in std_logic;
    vio_data_mode_value : in std_logic_vector(2 downto 0);
    vio_addr_mode_value : in std_logic_vector(2 downto 0);
+
    cmp_error       : out std_logic;
    cmp_data        : out std_logic_vector(31 downto 0);
    cmp_data_valid  : out std_logic;
    error           : out std_logic;
    error_status    : out std_logic_vector(127 downto 0)
+
+
 );
 end memc3_tb_top;
 
@@ -331,7 +339,6 @@ signal p0_mcb_cmd_instr_o_int :  std_logic_vector(2 DOWNTO 0);
 signal p0_mcb_wr_en_o_int     :  std_logic;      
 
 
-
 	
 --p2 Signal declarations
 signal p2_tg_run_traffic           : std_logic;
@@ -358,7 +365,7 @@ signal p2_mcb_cmd_en_o_int         : std_logic;
 signal p2_mcb_cmd_instr_o_int      : std_logic_vector(2 downto 0);
 signal p2_mcb_cmd_bl_o_int         : std_logic_vector(5 downto 0);
 signal p2_mcb_cmd_addr_o_int       : std_logic_vector(29 downto 0);
-signal p2_mcb_wr_en_o_int          : std_logic;
+signal p2_mcb_wr_en_o_int           : std_logic;
 
 	
 --p3 Signal declarations
@@ -386,7 +393,15 @@ signal p3_mcb_cmd_en_o_int         : std_logic;
 signal p3_mcb_cmd_instr_o_int      : std_logic_vector(2 downto 0);
 signal p3_mcb_cmd_bl_o_int         : std_logic_vector(5 downto 0);
 signal p3_mcb_cmd_addr_o_int       : std_logic_vector(29 downto 0);
-signal p3_mcb_wr_en_o_int          : std_logic;
+signal p3_mcb_wr_en_o_int           : std_logic;
+
+
+
+
+
+
+
+
 
 
 

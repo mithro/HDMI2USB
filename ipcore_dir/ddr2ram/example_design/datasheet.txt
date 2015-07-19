@@ -1,7 +1,7 @@
 
 
 CORE Generator Options:
-   Target Device              : xc6slx45-csg324
+   Target Device              : xc6slx45t-fgg484
    Speed Grade                : -3
    HDL                        : vhdl
    Synthesis Tool             : Foundation_ISE
@@ -16,29 +16,30 @@ MIG Output Options:
 /*                  Controller 3                       */
 /*******************************************************/
 Controller Options : 
-   Memory                  : DDR2_SDRAM
+   Memory                  : DDR3_SDRAM
    Interface               : NATIVE
-   Design Clock Frequency  : 3200 ps (312.50 MHz)
+   Design Clock Frequency  : 3000 ps (333.33 MHz)
    Memory Type             : Components
-   Memory Part             : MT47H64M16XX-25E
-   Equivalent Part(s)      : MT47H64M16HR-25E
-   Row Address             : 13
+   Memory Part             : MT41J128M16XX-125
+   Equivalent Part(s)      : MT41J128M16HA-125
+   Row Address             : 14
    Column Address          : 10
    Bank Address            : 3
    Data Mask               : enabled
 
 Memory Options :
-   Burst Length                       : 4(010)
-   CAS Latency                        : 5
-   DQS# Enable                        : Enable
-   DLL Enable                         : Enable-Normal
-   OCD Operation                      : OCD Exit
-   Output Drive Strength              : Fullstrength
-   Outputs                            : Enable
+   Burst Length                       : 8(00)
+   CAS Latency                        : 6
+   TDQS enable                        : Disabled
+   DLL Enable                         : Enable
+   Write Leveling Enable              : Disabled
+   Output Drive Strength              : RZQ/6
    Additive Latency (AL)              : 0
-   RDQS Enable                        : Disable
-   RTT (nominal) - ODT                : 50ohms       
-   High Temparature Self Refresh Rate : Disable
+   RTT (nominal) - ODT                : RZQ/4       
+   Auto Self Refresh                  : Enabled
+   CAS write latency                  : 5
+   Partial-Array Self Refresh         : Full Array
+   High Temparature Self Refresh Rate : Normal
 
 User Interface Parameters :
    Configuration Type     : Two 32-bit bi-directional and four 32-bit unidirectional ports

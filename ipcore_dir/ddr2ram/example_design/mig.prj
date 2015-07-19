@@ -1,47 +1,48 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <Project NoOfControllers="1" >
     <ModuleName>ddr2ram</ModuleName>
-    <TargetFPGA>xc6slx45-csg324/-3</TargetFPGA>
+    <TargetFPGA>xc6slx45t-fgg484/-3</TargetFPGA>
     <Version>3.92</Version>
     <Controller number="3" >
-        <MemoryDevice>DDR2_SDRAM/Components/MT47H64M16XX-25E</MemoryDevice>
-        <TimePeriod>3200</TimePeriod>
+        <MemoryDevice>DDR3_SDRAM/Components/MT41J128M16XX-125</MemoryDevice>
+        <TimePeriod>3000</TimePeriod>
         <EnableVoltageRange>0</EnableVoltageRange>
         <DataMask>1</DataMask>
         <CustomPart>FALSE</CustomPart>
-        <NewPartName></NewPartName>
-        <RowAddress>13</RowAddress>
+        <NewPartName/>
+        <RowAddress>14</RowAddress>
         <ColAddress>10</ColAddress>
         <BankAddress>3</BankAddress>
         <TimingParameters>
-            <Parameters twtr="7.5" trefi="7.8" twr="15" trtp="7.5" trfc="127.5" trp="12.5" tras="40" trcd="12.5" />
+            <Parameters twtr="7.5" trefi="7.8" twr="15" trtp="7.5" trfc="160" trp="13.75" tras="35" trcd="13.75" />
         </TimingParameters>
-        <mrBurstLength name="Burst Length" >4(010)</mrBurstLength>
-        <mrCasLatency name="CAS Latency" >5</mrCasLatency>
-        <emrDllEnable name="DLL Enable" >Enable-Normal</emrDllEnable>
-        <emrOutputDriveStrength name="Output Drive Strength" >Fullstrength</emrOutputDriveStrength>
-        <emrRTT name="RTT (nominal) - ODT" >50ohms</emrRTT>
+        <mrBurstLength name="Burst Length" >8(00)</mrBurstLength>
+        <mrCasLatency name="CAS Latency" >6</mrCasLatency>
+        <emrDllEnable name="DLL Enable" >Enable</emrDllEnable>
+        <emrOutputDriveStrength name="Output Driver Impedance Control" >RZQ/6</emrOutputDriveStrength>
+        <emrRTT name="RTT (nominal) - ODT" >RZQ/4</emrRTT>
         <emrPosted name="Additive Latency (AL)" >0</emrPosted>
-        <emrOCD name="OCD Operation" >OCD Exit</emrOCD>
-        <emrDQS name="DQS# Enable" >Enable</emrDQS>
-        <emrRDQS name="RDQS Enable" >Disable</emrRDQS>
-        <emrOutputs name="Outputs" >Enable</emrOutputs>
-        <mr2SelfRefreshTempRange name="High Temparature Self Refresh Rate" >Disable</mr2SelfRefreshTempRange>
+        <emrOCD name="Write Leveling Enable" >Disabled</emrOCD>
+        <emrDQS name="TDQS enable" >Disabled</emrDQS>
+        <mr2PartialArraySelfRefresh name="Partial-Array Self Refresh" >Full Array</mr2PartialArraySelfRefresh>
+        <mr2CasWriteLatency name="CAS write latency" >5</mr2CasWriteLatency>
+        <mr2AutoSelfRefresh name="Auto Self Refresh" >Enabled</mr2AutoSelfRefresh>
+        <mr2SelfRefreshTempRange name="High Temparature Self Refresh Rate" >Normal</mr2SelfRefreshTempRange>
         <PortInterface>NATIVE,NATIVE,NATIVE,NATIVE,NATIVE,NATIVE</PortInterface>
         <Class>Class II</Class>
         <DataClass>Class II</DataClass>
         <InputPinTermination>CALIB_TERM</InputPinTermination>
         <DataTermination>25 Ohms</DataTermination>
-        <CalibrationRowAddress></CalibrationRowAddress>
-        <CalibrationColumnAddress></CalibrationColumnAddress>
-        <CalibrationBankAddress></CalibrationBankAddress>
+        <CalibrationRowAddress/>
+        <CalibrationColumnAddress/>
+        <CalibrationBankAddress/>
         <SystemClock>Single-Ended</SystemClock>
         <BypassCalibration>1</BypassCalibration>
         <DebugSignals>Disable</DebugSignals>
         <SystemClock>Single-Ended</SystemClock>
         <Configuration>Two 32-bit bi-directional and four 32-bit unidirectional ports</Configuration>
-        <RzqPin>L6</RzqPin>
-        <ZioPin>C2</ZioPin>
+        <RzqPin>R7</RzqPin>
+        <ZioPin>K7</ZioPin>
         <PortsSelected>Port2,Port3</PortsSelected>
         <PortDirections>none,none,Read,Write,none,none</PortDirections>
         <UserMemoryAddressMap>ROW_BANK_COLUMN</UserMemoryAddressMap>

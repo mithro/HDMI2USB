@@ -71,7 +71,7 @@ component ddr2ram
     C3_P0_DATA_PORT_SIZE      : integer := 32;
     C3_P1_MASK_SIZE           : integer := 4;
     C3_P1_DATA_PORT_SIZE      : integer := 32;
-    C3_MEMCLK_PERIOD          : integer := 3200;
+    C3_MEMCLK_PERIOD          : integer := 3000;
     C3_RST_ACT_LOW            : integer := 0;
     C3_INPUT_CLK_TYPE         : string := "SINGLE_ENDED";
     C3_CALIB_SOFT_IP          : string := "TRUE";
@@ -79,7 +79,7 @@ component ddr2ram
     DEBUG_EN                  : integer := 0;
     C3_MEM_ADDR_ORDER         : string := "ROW_BANK_COLUMN";
     C3_NUM_DQ_PINS            : integer := 16;
-    C3_MEM_ADDR_WIDTH         : integer := 13;
+    C3_MEM_ADDR_WIDTH         : integer := 14;
     C3_MEM_BANKADDR_WIDTH     : integer := 3
 );
     port (
@@ -90,6 +90,7 @@ component ddr2ram
    mcb3_dram_cas_n                         : out std_logic;
    mcb3_dram_we_n                          : out std_logic;
    mcb3_dram_odt                           : out std_logic;
+   mcb3_dram_reset_n                       : out std_logic;
    mcb3_dram_cke                           : out std_logic;
    mcb3_dram_dm                            : out std_logic;
    mcb3_dram_udqs                          : inout  std_logic;
@@ -179,9 +180,10 @@ end component;
   mcb3_dram_ck       =>    mcb3_dram_ck,                          
   mcb3_dram_ck_n     =>    mcb3_dram_ck_n,       
   mcb3_dram_dqs      =>    mcb3_dram_dqs,                          
-  mcb3_dram_dqs_n  =>      mcb3_dram_dqs_n,
+  mcb3_dram_dqs_n    =>    mcb3_dram_dqs_n,
+  mcb3_dram_reset_n =>     mcb3_dram_reset_n,
   mcb3_dram_udqs  =>       mcb3_dram_udqs,    -- for X16 parts           
-  mcb3_dram_udqs_n    =>   mcb3_dram_udqs_n,  -- for X16 parts
+    mcb3_dram_udqs_n  =>       mcb3_dram_udqs_n,    -- for X16 parts
   mcb3_dram_udm  =>        mcb3_dram_udm,     -- for X16 parts
   mcb3_dram_dm  =>       mcb3_dram_dm,
     c3_clk0	=>	        c3_clk0,
@@ -189,10 +191,9 @@ end component;
 	
  
   c3_calib_done      =>    c3_calib_done,
-     mcb3_rzq        =>            rzq3,
-	
-     mcb3_zio        =>            zio3,
-	
+     mcb3_rzq         =>            rzq3,
+        
+     mcb3_zio         =>            zio3,
      c3_p2_cmd_clk                           =>  c3_p2_cmd_clk,
    c3_p2_cmd_en                            =>  c3_p2_cmd_en,
    c3_p2_cmd_instr                         =>  c3_p2_cmd_instr,

@@ -52,7 +52,7 @@
 ## \   \   \/     Version            : 3.92
 ##  \   \         Application	     : MIG
 ##  /   /         Filename           : readme.txt
-## /___/   /\     Date Last Modified : $Date: 2011/06/02 07:16:55 $
+## /___/   /\     Date Last Modified : $Date: 2011/06/02 07:16:58 $
 ## \   \  /  \    Date Created       : Mon Oct 19 2009
 ##  \___\/\___\
 ##
@@ -96,13 +96,6 @@ B) Steps to run the Modelsim simulation:
 
    4) Verify the transcript file for the memory transactions.
 
-C) For simulation with Elpida parts perform the following steps and then
-   the above mentioned steps in 'B'
-
-   1) Download the Elpida memory model from Elpida webpage.
-
-   2) Update the memorymodel name in the vlog command given in sim.do file.
-
 
 2. Simulation using ISIM simulator
   
@@ -127,5 +120,3 @@ B) Steps to run the ISIM simulation:
 
    3) User can add required signals from objects window to the waveform viewer and run 
       simulation for specified time using the command "run <time>" in ISIM GUI.
-
-C) Simulations using ISIM simulator is not supported for Elpida parts. 

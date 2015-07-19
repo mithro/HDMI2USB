@@ -8,12 +8,12 @@ run
 #Target Parameters
 -ofn example_top
 -ofmt NGC
--p xc6slx45-3csg324
+-p xc6slx45t-3fgg484
 #AXI_ENABLE definition is not required for NATIVE interface
 #Source Options
 -top example_top
 -fsm_extract Yes 
--fsm_encoding one-hot
+-fsm_encoding one-hot 
 -safe_implementation No
 -fsm_style lut
 -ram_extract Yes

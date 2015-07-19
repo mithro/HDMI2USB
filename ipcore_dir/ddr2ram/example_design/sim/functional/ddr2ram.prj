@@ -26,7 +26,7 @@ vhdl  work  ../../rtl/traffic_gen/write_data_path.vhd
 
 verilog  work  $XILINX/verilog/src/glbl.v
 vhdl  work  ./sim_tb_top.vhd
-verilog  work  ./ddr2_model_c3.v -d x1Gb -d sg25E -d x16 -i ./
+verilog  work  ./ddr3_model_c3.v -d x2Gb -d sg125 -d x16 -i ./
 
 
 

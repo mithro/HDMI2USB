@@ -26,8 +26,8 @@ add_file -vhdl "../rtl/traffic_gen/write_data_path.vhd"
 add_file -constraint "../synth/mem_interface_top_synp.sdc"
 impl -add rev_1
 set_option -technology spartan6
-set_option -part xc6slx45
-set_option -package csg324
+set_option -part xc6slx45t
+set_option -package fgg484
 set_option -speed_grade -3
 set_option -default_enum_encoding default
 #AXI_ENABLE synp definition is not required for user_design
@@ -35,7 +35,7 @@ set_option -symbolic_fsm_compiler 1
 set_option -resource_sharing 0
 set_option -use_fsm_explorer 0
 set_option -top_module "example_top"
-set_option -frequency 312.5
+set_option -frequency 333.333
 set_option -fanout_limit 1000
 set_option -disable_io_insertion 0
 set_option -pipe 1
