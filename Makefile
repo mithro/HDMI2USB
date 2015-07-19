@@ -10,7 +10,7 @@ INTSTYLE = ise
 # Top Level
 all: info syn tran map par trce bit
 
-DEVICE ?= Digilent/Atlys
+DEVICE ?= Numato/Opsis
 include boards/$(DEVICE)/Makefile
 BOARD_SPEC=$(BOARD_MAKER)-$(BOARD_MODEL)-$(BOARD_REVISION)
 
