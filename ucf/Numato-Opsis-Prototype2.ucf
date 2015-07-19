@@ -64,24 +64,34 @@ NET "rst_n"                LOC =     "Y3" |IOSTANDARD = LVCMOS15 | PULLUP;
 NET "scl_pc0"                 LOC =   "L17" |IOSTANDARD =        LVCMOS33;     #                      (/HDMI/P1-SCL | /HDMI/TMDS-RX1-SCL)
 # \/ Weakly pulled (47k) to VCC3V3 via R136
 NET "sda_pc0"                 LOC =   "T18" |IOSTANDARD =        LVCMOS33;     #                      (/HDMI/P1-SDA | /HDMI/TMDS-RX1-SDA)
+# \/ Strongly pulled (1k) to /HDMI/HDMI_VCC5V0 via R153
+# \/ Weakly pulled (15k) to GND via R151
+NET "hpd_pc0"                 LOC =   "V19" |IOSTANDARD =        LVCMOS33;
 
 # HDMI - connector J5 - Direction RX
 # \/ Weakly pulled (47k) to VCC3V3 via R193
 NET "scl_pc1"                 LOC =   "T21" |IOSTANDARD =        LVCMOS33;     #                      (/HDMI/P3-SCL | /HDMI/TMDS-RX2-SCL)
 # \/ Weakly pulled (47k) to VCC3V3 via R194
 NET "sda_pc1"                 LOC =   "R22" |IOSTANDARD =        LVCMOS33;     #                      (/HDMI/P3-SDA | /HDMI/TMDS-RX2-SDA)
+# \/ Strongly pulled (1k) to /HDMI/HDMI_VCC5V0 via R205
+# \/ Weakly pulled (15k) to GND via R204
+NET "hpd_pc1"                 LOC =   "R20" |IOSTANDARD =        LVCMOS33;
 
 # HDMI - connector J2 - Direction TX
 # \/ Weakly pulled (47k) to VCC3V3 via R129
 NET "scl_lcd0"                LOC =   "Y17" |IOSTANDARD =        LVCMOS33;     #                      (/HDMI/P4-SCL | /HDMI/TMDS-TX2-SCL)
 # \/ Weakly pulled (47k) to VCC3V3 via R133
-NET "sda_lcd0"                LOC =   "AB17" |IOSTANDARD =        LVCMOS33;     #                      (/HDMI/P4-SDA | /HDMI/TMDS-TX2-SDA)
+NET "sda_lcd0"                LOC =   "AB17"|IOSTANDARD =        LVCMOS33;     #                      (/HDMI/P4-SDA | /HDMI/TMDS-TX2-SDA)
+# \/ Weakly pulled (15k) to GND via R149
+NET "hpd_lcd0"                LOC =   "AB18"|IOSTANDARD =        LVCMOS33;
 
 # HDMI - connector J3 - Direction TX
 # \/ Weakly pulled (47k) to VCC3V3 via R134
 #NET "scl_lcd1"                LOC =   "Y7" |IOSTANDARD =        LVCMOS33;     #                      (/HDMI/P2-SCL | /HDMI/TMDS-TX1-SCL)
 # \/ Weakly pulled (47k) to VCC3V3 via R130
-#NET "scl_lcd1"                LOC =   "Y10" |IOSTANDARD =        LVCMOS33;     #                      (/HDMI/P2-SDA | /HDMI/TMDS-TX1-SDA)
+#NET "sda_lcd1"                LOC =   "Y10"|IOSTANDARD =        LVCMOS33;     #                      (/HDMI/P2-SDA | /HDMI/TMDS-TX1-SDA)
+# \/ Weakly pulled (15k) to GND via R148
+NET "hpd_lcd1"                LOC =   "AB7"|IOSTANDARD =        LVCMOS33;
 
 #########################################################################################################
 #
