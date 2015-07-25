@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <report-views version="2.0" >
  <header>
-  <DateModified>2015-07-20T00:46:26</DateModified>
+  <DateModified>2015-07-25T14:59:03</DateModified>
   <ModuleName>hdmi2usb</ModuleName>
   <SummaryTimeStamp>Unknown</SummaryTimeStamp>
-  <SavedFilePath>/usr/local/google/home/tansell/foss/timvideos/hdmi2usb/hdmi2usb-firmware/ise/iseconfig/hdmi2usb.xreport</SavedFilePath>
-  <ImplementationReportsDirectory>/usr/local/google/home/tansell/foss/timvideos/hdmi2usb/hdmi2usb-firmware/ise/</ImplementationReportsDirectory>
+  <SavedFilePath>/home/tansell/foss/timvideos/hdmi2usb/numato/hdmi2usb-firmware/ise/iseconfig/hdmi2usb.xreport</SavedFilePath>
+  <ImplementationReportsDirectory>/home/tansell/foss/timvideos/hdmi2usb/numato/hdmi2usb-firmware/ise/</ImplementationReportsDirectory>
   <DateInitialized>2013-07-03T20:19:05</DateInitialized>
   <EnableMessageFiltering>true</EnableMessageFiltering>
  </header>
