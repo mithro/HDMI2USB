@@ -1,6 +1,6 @@
 setPreference -pref KeepSVF:True
 setMode -bs
-setCable -port xsvf -file hdmi2usb.xsvf
-addDevice -p 1 -file hdmi2usb.bit
-program -p 1
+setCable -port svf -file hdmi2usb.svf
+addDevice -p 1 -part xc6slx45t_fgg484
+readDna -p 1
 quit
