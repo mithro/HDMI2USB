@@ -77,6 +77,8 @@ NET "sda_pc1"                 LOC =   "R22" |IOSTANDARD =        LVCMOS33;     #
 # \/ Weakly pulled (15k) to GND via R204
 NET "hpd_pc1"                 LOC =   "R20" |IOSTANDARD =        LVCMOS33;
 
+PIN "ddr2_comp/ramComp/memc3_infrastructure_inst/U_BUFG_CLK0.O" CLOCK_DEDICATED_ROUTE = FALSE;
+
 # HDMI - connector J2 - Direction TX
 # \/ Weakly pulled (47k) to VCC3V3 via R129
 NET "scl_lcd0"                LOC =   "Y17" |IOSTANDARD =        LVCMOS33;     #                      (/HDMI/P4-SCL | /HDMI/TMDS-TX2-SCL)

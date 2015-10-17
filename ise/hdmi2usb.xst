@@ -1,6 +1,7 @@
+set -tmpdir "xst/projnav.tmp"
 set -xsthdpdir "xst"
 run
--ifn ../ise/hdmi2usb.prj
+-ifn hdmi2usb.prj
 -ofn hdmi2usb
 -ofmt NGC
 -p xc6slx45t-3-fgg484
